@@ -1,0 +1,23 @@
+.additionInfo{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 3fr 6fr;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.icon{
+    width: 0.9rem;
+    height: 0.9rem;
+    margin-left: 0.9rem;
+    margin-top: 0.3rem;
+    font-size: 0.5rem;
+}
+.lessonTime{
+    margin-left: 0.2rem;
+    margin-top: 0.2rem;
+}
+.countLessons{
+    display: flex;
+    margin-left: auto;
+    margin-right: 2rem;
+}
