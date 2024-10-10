@@ -1,0 +1,33 @@
+.testList{
+    height: 100%;
+}
+.numberList{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.7rem;
+    font-size: 0.95rem;
+    width: 100%;
+    height: 18%;
+}
+.bold{
+    width: 2rem;
+    height: 2rem;
+    opacity: 1;
+    font-weight: 600;
+    color: #49bbbd;
+    border: 1px solid #238a8b;
+    box-shadow: 0 0 2px #4bd8da;;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.blur{
+    opacity: 0.3;
+    
+}
+.questionDisplay{
+    width: 100%;
+    height: 80%;
+}
