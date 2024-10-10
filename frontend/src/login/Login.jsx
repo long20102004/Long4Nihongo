@@ -1,43 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "./UseAuth";
+import React, { useState } from "react";
 import classes from "./Login.module.css";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const { isLogin, setLogin } = useAuth();
-  const navigate = useNavigate();
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
-    if (token) {
-      localStorage.setItem("jwtToken", token);
-      console.log("Token saved:", token);
-      navigate("/");
-      setLogin(true);
-    }
-  }, [navigate]);
 
   function handleLogin() {
-    fetch("http://localhost:8080/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    })
-      .then((response) => {
-        console.log(response);
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        localStorage.setItem("jwtToken", data.token);
-        setLogin(true);
-        window.location.href = "http://localhost:3000/";
-      });
+    // if (!validateEmail(username)) {
+    //   console.warn("error");
+    //   return;
+    // }
+    // console.log(username);
+    // Add your authentication logic here
+    // For demonstration, we'll just redirect to the landing page
+    window.location.href = "http://localhost:3000/landing";
   }
   function register() {
     window.location.href = "http://localhost:3000/register";
