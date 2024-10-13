@@ -1,5 +1,5 @@
 # Long4Nihongo
-## 1. Thông tin nhóm
+## 1. Thông tin chung
 **Tên Dự Án:** Long4Nihongo
 **Link truy cập:** [long4nihongo.com]
 
@@ -9,7 +9,7 @@
 - Hoàng Hải Long
 
 **Mô hình làm việc**
-Team hoạt động theo mô hình Scrum, sử dụng Linear để quản lý công việc. Các công việc được keep track đầy đủ trên Linear.
+Hoạt động theo mô hình Scrum, sử dụng Linear để quản lý công việc. Các công việc được keep track đầy đủ trên Linear.
 
 - Link linear: [https://linear.app/bdtproptit/team/NHOM2/all](https://linear.app/nhom2-oop/team/FEAT/all)
 
