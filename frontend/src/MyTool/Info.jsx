@@ -5,17 +5,46 @@ export default function Info(children) {
   return (
     <>
       <div className={classes.additionInfo}>
-        <img className={classes.icon} src={clockIcon} alt="" />
-        <div className={classes.lessonTime}>{children.learningTime} Hour</div>
-
-        <div className={classes.countLessons}>
-          {" "}
+        <div>
+          <img className={classes.icon} src={clockIcon} alt="" />
+          <div className={classes.lessonTime}>{children.learningTime} Hour</div>
+        </div>
+        <div>
           <img className={classes.icon} src={bookIcon} alt="" />
           <div className={classes.lessonTime}>
             {children.numberLessons} Lessons
           </div>
         </div>
       </div>
+      {/* <div
+        style={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "space-around",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img className={classes.icon} src={clockIcon} alt="" />
+          <div style={{ padding: "5px" }}>{children.learningTime} Hour</div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img className={classes.icon} src={bookIcon} alt="" />
+          <div style={{ padding: "5px" }}>{children.numberLessons} Lessons</div>
+        </div>
+      </div> */}
     </>
   );
 }

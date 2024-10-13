@@ -14,7 +14,7 @@ export default function QuestionManage(props) {
     }
   }, [clickedNext]);
   return (
-    <>
+    <div className={classes.questionBorder}>
       <div className={classes.testList}>
         <div className={classes.numberList}>
           {Array.from({ length: props.numberContent }, (_, i) => (
@@ -34,8 +34,13 @@ export default function QuestionManage(props) {
             (content, index) =>
               index == selectedQuestion && (
                 <Question
+                  answer1={content.answer1}
+                  answer2={content.answer2}
+                  answer3={content.answer3}
+                  answer4={content.answer4}
+                  correctAnswer={content.correctAnswer}
                   key={content.id}
-                  content={content.question}
+                  question={content.question}
                   idQuestion={selectedQuestion + 1}
                   clickedNext={clickedNext}
                   setClickedNext={setClickedNext}
@@ -44,6 +49,6 @@ export default function QuestionManage(props) {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

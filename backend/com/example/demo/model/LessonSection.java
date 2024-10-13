@@ -20,4 +20,6 @@ public class LessonSection {
     @ManyToOne
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
+    @Column(name = "type")
+    private String type;
 }

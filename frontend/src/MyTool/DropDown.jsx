@@ -28,6 +28,7 @@ export default function Dropdown(props) {
   }, [props.lessonId]);
 
   function callSectionContent(sectionId) {
+    props.setSectionId(sectionId);
     fetch(`http://localhost:8080/section/${sectionId}/content`, {
       method: "GET",
       headers: {
@@ -36,22 +37,27 @@ export default function Dropdown(props) {
     })
       .then((response) => {
         if (!response.ok) {
+          props.setSectionValid("invalid");
+          console.log(response.status);
           throw new Error("Response is not ok");
         }
         return response.json();
       })
       .then((data) => {
-        console.log(data);
-        props.setCourseContent(data);
+        props.setCourseContent(data.content);
+        console.log(data.content);
+        props.setSectionValid(data.sectionType);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }
   return (
     <>
       <div
         className={`${classes.dropdown} ${dropdownOpen ? classes.open : ""}`}
-        onClick={toggleDropdown}
       >
-        <div id={classes.lessonName}>
+        <div id={classes.lessonName} onClick={toggleDropdown}>
           <div className={classes.name}>{props.lessonName}</div>
           <Info
             learningTime={props.learningTime}

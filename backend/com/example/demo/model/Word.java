@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "flash_cards")
+@Table(name = "words")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class FlashCard {
+public class Word {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,10 @@ public class FlashCard {
     @JoinColumn(name = "learning_section_id")
     @Getter(AccessLevel.NONE)
     private LessonSection lessonSection;
-    @Column(name = "word")
-    private String word;
+    @Column(name = "hiragana")
+    private String hiragana;
+    @Column(name = "kanji")
+    private String kanji;
     @Column(name = "meaning")
     private String meaning;
-    @Column(name = "example")
-    private String example;
 }

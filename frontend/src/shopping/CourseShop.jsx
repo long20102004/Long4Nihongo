@@ -9,11 +9,12 @@ export default function CourseShop() {
     fetch("http://localhost:8080/courses")
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          // throw new Error("Network response was not ok");
         }
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         setCourses(data);
       })
       .catch((error) => {

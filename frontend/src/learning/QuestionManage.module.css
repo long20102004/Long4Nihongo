@@ -1,3 +1,8 @@
+.questionBorder{
+    height: 50%;
+    background-color: white;
+    border-radius: 2rem;
+}
 .testList{
     height: 100%;
 }

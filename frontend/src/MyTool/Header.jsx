@@ -22,6 +22,25 @@ export default function Header(props) {
         console.log(data);
       });
   });
+  function returnMainPage() {
+    window.location.href = "http://localhost:3000";
+  }
+  function handleLogout() {
+    fetch("http://localhost:8080/logoutt", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("User is not valid");
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      });
+  }
   function moveToLogin() {
     window.location.href = "http://localhost:3000/login";
   }
@@ -29,22 +48,27 @@ export default function Header(props) {
     window.location.href = "http://localhost:3000/register";
   }
   function logOut() {
-    window.location.href = "http://localhost:8080/logout";
+    handleLogout();
     setLogin(false);
   }
   return (
     <div className={classes.header}>
-      <img className={classes.logo} src="./app-icon.png" alt="" />
+      <img
+        className={classes.logo}
+        onClick={returnMainPage}
+        src="/app-icon.png"
+        alt=""
+      />
       <div className={classes.listItems}>
-        <span>Home</span>
-        <span>Courses</span>
+        <span onClick={returnMainPage}>Home</span>
+        <span onClick={returnMainPage}>Courses</span>
         <span>Blog</span>
         <span>Social</span>
         <span>About us</span>
       </div>
       {isLogin && (
         <div className={classes.user}>
-          <img className={classes.avatar} src="./avatar.png" alt="" />{" "}
+          <img className={classes.avatar} src="/avatar.png" alt="" />{" "}
           <span className={classes.name} onClick={logOut}>
             Logout
           </span>

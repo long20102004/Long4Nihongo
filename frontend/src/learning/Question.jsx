@@ -1,50 +1,28 @@
 import classes from "./Question.module.css";
 import React, { useState, useEffect } from "react";
-export default function Question({
-  idQuestion,
-  clickedNext,
-  setClickedNext,
-  content,
-}) {
-  const [currentId, setCurrentId] = useState(idQuestion);
+export default function Question(props) {
+  const [currentId, setCurrentId] = useState(props.idQuestion);
   const [fade, setFade] = useState(false);
-  const [questionData, setQuestionData] = useState("");
-  const [error, setError] = useState(null);
-  // useEffect(() => {
-  //   const token = localStorage.getItem("jwtToken");
-  //   setCurrentId(idQuestion);
-  //   fetch(`http://localhost:8080/questions/${idQuestion}`, {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //     .then((response) => {
-  //       console.log(token);
-  //       if (!response.ok) {
-  //         throw new Error("Network response was not ok");
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       setQuestionData(data.question);
-  //     })
-  //     .catch((error) => {
-  //       setError(error.message);
-  //       console.error("Fetch error:", error);
-  //     });
-  // }, [currentId, handleSubmit]);
-
+  const [answerClicked, setAnswer] = useState();
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false); // State to show correct answer
+  const [clicked, setClicked] = useState(false);
   useEffect(() => {
     if (fade) {
       const timer = setTimeout(() => {
         setFade(false);
-        setClickedNext(true);
+        props.setClickedNext(true);
       }, 200);
       return () => clearTimeout(timer);
     }
   });
-
+  function checkAnswer(answer) {
+    if (clicked) return;
+    setAnswer(answer);
+    if (answer !== props.correctAnswer) {
+      setShowCorrectAnswer(true);
+    }
+    setClicked(true);
+  }
   function handleSubmit() {
     setFade(true);
   }
@@ -58,20 +36,67 @@ export default function Question({
       >
         <div className={classes.list}></div>
         <div className={classes.question}>
-          {currentId}. {content}
+          {currentId}. {props.question}
         </div>
         <div className={classes.answerBody}>
-          <div className={classes.answerContainer}>
-            <div className={classes.answer}>1. いちじん</div>
+          <div
+            className={`${classes.answerContainer} ${
+              answerClicked === props.answer1
+                ? props.correctAnswer === props.answer1
+                  ? classes.correctAnswer
+                  : classes.wrongAnswer
+                : showCorrectAnswer && props.correctAnswer === props.answer1
+                ? classes.correctAnswer
+                : ""
+            }`}
+            onClick={() => checkAnswer(props.answer1)}
+          >
+            <div className={classes.answer}>1. {props.answer1}</div>
           </div>
-          <div className={classes.answerContainer}>
-            <div className={classes.answer}>1. いちじん</div>
+
+          <div
+            className={`${classes.answerContainer} ${
+              answerClicked === props.answer2
+                ? props.correctAnswer === props.answer2
+                  ? classes.correctAnswer
+                  : classes.wrongAnswer
+                : showCorrectAnswer && props.correctAnswer === props.answer2
+                ? classes.correctAnswer
+                : ""
+            }`}
+            onClick={() => checkAnswer(props.answer2)}
+          >
+            <div className={classes.answer}>2. {props.answer2}</div>
           </div>
-          <div className={classes.answerContainer}>
-            <div className={classes.answer}>1. いちじん</div>
+
+          <div
+            className={`${classes.answerContainer} ${
+              answerClicked === props.answer3
+                ? props.correctAnswer === props.answer3
+                  ? classes.correctAnswer
+                  : classes.wrongAnswer
+                : showCorrectAnswer && props.correctAnswer === props.answer3
+                ? classes.correctAnswer
+                : ""
+            }`}
+            onClick={() => checkAnswer(props.answer3)}
+          >
+            <div className={classes.answer}>3. {props.answer3}</div>
           </div>
-          <div className={classes.answerContainer}>
-            <div className={classes.answer}>1. いちじん</div>
+
+          <div
+            className={`${classes.answerContainer} ${
+              answerClicked === props.answer4
+                ? props.correctAnswer === props.answer4
+                  ? classes.correctAnswer
+                  : classes.wrongAnswer
+                : showCorrectAnswer && props.correctAnswer === props.answer4
+                ? classes.correctAnswer
+                : ""
+            }`}
+            onClick={() => checkAnswer(props.answer4)}
+          >
+            <div className={classes.answer}>4. {props.answer4}</div>
           </div>
         </div>
         <div className={classes.submitButton} onClick={handleSubmit}>

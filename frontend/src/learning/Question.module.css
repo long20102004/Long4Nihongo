@@ -52,3 +52,9 @@
 .submitButton:hover{
     color: black;
 }
+.correctAnswer{
+    background-color: #49bbbd;
+}
+.wrongAnswer{
+    background-color: rgb(218, 125, 125);
+}

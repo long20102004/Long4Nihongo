@@ -1,23 +1,26 @@
 .additionInfo{
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 3fr 6fr;
+    display: flex;
     font-size: 0.8rem;
     font-weight: 500;
+    overflow: hidden;
+    padding: 0 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+.additionInfo > *{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .icon{
     width: 0.9rem;
     height: 0.9rem;
-    margin-left: 0.9rem;
-    margin-top: 0.3rem;
     font-size: 0.5rem;
 }
 .lessonTime{
-    margin-left: 0.2rem;
-    margin-top: 0.2rem;
+    padding-left: 0.3rem;
 }
 .countLessons{
     display: flex;
-    margin-left: auto;
-    margin-right: 2rem;
 }

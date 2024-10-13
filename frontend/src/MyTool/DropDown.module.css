@@ -23,8 +23,8 @@
     border-radius: 0.4rem;
     overflow: hidden;
     transition: max-height 0.2s ease-in-out, opacity 0.25s ease-in-out;
-    font-family: "QuickSand", sans-serif;
-    font-weight: 600;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 500;
     font-size: 0.8rem;
     padding: 0;
 }
