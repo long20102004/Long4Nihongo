@@ -1,6 +1,7 @@
 # Long4Nihongo
 ## 1. Thông tin chung
 **Tên Dự Án:** Long4Nihongo
+
 **Link truy cập:** [long4nihongo.com]
 
 **Link Dự Án:** [https://github.com/long20102004/ProGameJam-Obsidian_Chronicles/tree/main](https://github.com/long20102004/Long4Nihongo)
