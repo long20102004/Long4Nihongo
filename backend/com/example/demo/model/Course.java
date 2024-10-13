@@ -1,11 +1,16 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.sql.Date;
+import java.util.Set;
+
 @Table(name = "courses")
 @Entity
 @Getter
@@ -30,4 +35,7 @@ public class Course {
     private Integer numberLessons;
     @Column(name = "price")
     private Integer price;
+    @Getter(AccessLevel.NONE)
+    @ManyToMany(mappedBy = "courseSet")
+    private Set<User> userSet;
 }

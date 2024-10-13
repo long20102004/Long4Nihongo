@@ -1,5 +1,7 @@
 package com.example.demo.security;
 
+import com.example.demo.model.InvalidToken;
+import com.example.demo.repository.InvalidTokenRepository;
 import com.example.demo.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -22,6 +24,8 @@ import java.io.IOException;
 public class JwtTokenFilter extends OncePerRequestFilter {
     private JwtUtility jwtUtility;
     private UserService userService;
+    @Autowired
+    private InvalidTokenRepository invalidTokenRepository;
 
     @Autowired
     public JwtTokenFilter(JwtUtility jwtTokenUtil, UserService userService) {
@@ -31,11 +35,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         String header = request.getHeader("Authorization");
         String jwt = null;
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
             jwt = header.substring(7);
+            InvalidToken invalidToken = invalidTokenRepository.getInvalidTokenByToken(jwt);
+            if (invalidToken != null) {
+                jwt = null;
+            }
         }
         if (jwt != null) {
             try {

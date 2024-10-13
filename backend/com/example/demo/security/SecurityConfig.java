@@ -55,23 +55,19 @@ public class SecurityConfig {
             });
         });
         httpSecurity.authorizeHttpRequests(request ->
-                        request.requestMatchers("/", "oauth2/**", "/login/**", "/register", "/courses/**", "/logout", "/valid").permitAll().
-                                anyRequest().authenticated()).
+                        request.requestMatchers("/", "oauth2/**", "/login/**", "/register", "/courses/**", "/valid", "/course/**", "/lessons/**").permitAll()
+                        .requestMatchers("/edit/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()).
                 sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(
                         jwtTokenFilter, UsernamePasswordAuthenticationFilter.class
-                ).oauth2Login((oath2Login) -> {
-                    oath2Login.successHandler(successHandler())
+                ).oauth2Login((oauth2Login) -> {
+                    oauth2Login.successHandler(successHandler())
                             .failureUrl("/fail")
                     ;
                 }).cors(Customizer.withDefaults());
-        ;
-        httpSecurity.logout(logout -> logout.logoutUrl("/logout")
-                .logoutSuccessUrl("http://localhost:3000/")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID"));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
     }

@@ -19,6 +19,11 @@ public class MyExceptionHandler {
         ErrorMessage message = new ErrorMessage(HttpStatusCode.valueOf(600), exception.getMessage());
         return new ResponseEntity<>(message, HttpStatus.NOT_ACCEPTABLE);
     }
+    @ExceptionHandler(CourseInvalidException.class)
+    public ResponseEntity<ErrorMessage> courseInvalidException(CourseInvalidException exception){
+        ErrorMessage message = new ErrorMessage(HttpStatusCode.valueOf(600), exception.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
+    }
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<ErrorMessage> wrongToken(UserExistedException exception){
         ErrorMessage message = new ErrorMessage(HttpStatusCode.valueOf(600), exception.getMessage());

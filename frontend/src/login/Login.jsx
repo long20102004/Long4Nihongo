@@ -29,7 +29,7 @@ export default function Login() {
   }
   return (
     <div className={classes.body}>
-      <img src="/image.png" alt="" className={classes.image} />
+      <img src="/login-back.png" alt="" className={classes.image} />
       <div className={classes.Login}>
         <h2>Đăng nhập</h2>
         <label className={classes.label}>Email</label>
