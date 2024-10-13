@@ -6,26 +6,21 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
+  function handleLogin() {
+    // if (!validateEmail(username)) {
+    //   console.warn("error");
+    //   return;
+    // }
+    // console.log(username);
+    // Add your authentication logic here
+    // For demonstration, we'll just redirect to the landing page
+    window.location.href = "http://localhost:3000/landing";
+  }
   function register() {
-    fetch("http://localhost:8080/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data.message);
-      });
+    window.location.href = "http://localhost:3000";
   }
   function googleLogin() {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
-  }
-  function loginRedirect() {
-    window.location.href = "http://localhost:3000/login";
   }
 
   function faceBookLogin() {
@@ -36,7 +31,7 @@ export default function Login() {
     <div className={classes.body}>
       <img src="/image.png" alt="" className={classes.image} />
       <div className={classes.Login}>
-        <h2>Đăng ký</h2>
+        <h2>Đăng nhập</h2>
         <label className={classes.label}>Email</label>
         <input
           type="email"
@@ -74,7 +69,7 @@ export default function Login() {
           </label>
         </div>
         <p id={classes.action}>
-          <button className={classes.button} onClick={register}>
+          <button className={classes.button} onClick={handleLogin}>
             Đăng ký
           </button>
         </p>
@@ -99,7 +94,7 @@ export default function Login() {
 
         <div className={classes.register}>
           Bạn đã có tài khoản?
-          <span className={classes.registerRedirect} onClick={loginRedirect}>
+          <span className={classes.registerRedirect} onClick={register}>
             {" "}
             Đăng nhập ngay
           </span>
