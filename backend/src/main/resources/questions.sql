@@ -1,0 +1,4 @@
+INSERT INTO long4nihongo.questions (id, lesson_section_id, question, answer_1, answer_2, answer_3, answer_4, correct_answer) VALUES (1, 5, ' 中学校の頃の 同級生 とすれ違ちがったけど、名前が思い出せない。', 'どきょうせん', 'とうきゅしょう', 'どうきゅうせい', 'どうきゅうしょう', 'どうきゅうせい');
+INSERT INTO long4nihongo.questions (id, lesson_section_id, question, answer_1, answer_2, answer_3, answer_4, correct_answer) VALUES (4, 5, ' が切れて来たなら、深呼吸をしてみましょう', 'しんこうきゅ', 'しんこきゅう', 'ふかごうきゅ', 'ふかこきゅう', 'しんこきゅう');
+INSERT INTO long4nihongo.questions (id, lesson_section_id, question, answer_1, answer_2, answer_3, answer_4, correct_answer) VALUES (5, 1, '人口約十億人の国', 'じゅうおうく', 'じゅうおく', 'とおおうく', 'とおく', 'じゅうおく');
+INSERT INTO long4nihongo.questions (id, lesson_section_id, question, answer_1, answer_2, answer_3, answer_4, correct_answer) VALUES (6, 1, 'よっぱらって昨日の記憶がない', 'きおく', 'ぎょうく', 'ぎおく', ' ぎょうく', 'きおく');

@@ -1,0 +1,11 @@
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (1, 'Bài 1: Xin chào! Tôi là Long', 1);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (2, 'Bài 2: Chỗ này là chỗ nào vậy?', 1);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (3, 'Bài 3: Bây giờ là mấy giờ rồi ạ', 1);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (4, 'Bài 4: Cái ví này giá bao nhiêu tiền vậy ạ', 1);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (5, 'Bài 5: Hôm nay là thứ hai', 1);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (6, 'Bài 6: Anh Satoshi đã về chưa ạ?', 1);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (7, 'Bài 7: Tôi có thể bơi!', 1);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (8, 'Bài 8: Anh ấy đẹp trai hơn bạn!', 1);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (9, 'Bài 1: Cách học kanji (phần 1)', 2);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (10, 'Bài 2: Cách học kanji (phần 2)', 2);
+INSERT INTO long4nihongo.lessons (id, name, course_id) VALUES (11, 'Bài 3: Các bộ thủ cần nhớ', 2);
