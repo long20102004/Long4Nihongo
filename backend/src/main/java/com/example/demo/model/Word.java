@@ -5,26 +5,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Table(name = "words")
-@Entity
+@Document(collection = "words")
 @Getter
 @Setter
-@NoArgsConstructor
-public class Word extends Data {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Word{
     private int id;
-    @ManyToOne
-    @JoinColumn(name = "learning_section_id")
-    @Getter(AccessLevel.NONE)
-    private LessonSection lessonSection;
-    @Column(name = "hiragana")
+    private int sectionId;
     private String hiragana;
-    @Column(name = "kanji")
     private String kanji;
-    @Column(name = "meaning")
     private String meaning;
 }

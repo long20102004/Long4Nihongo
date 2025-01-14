@@ -1,15 +1,14 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.Lesson;
-import com.example.demo.model.LessonSection;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import com.example.demo.model.Section;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface SectionRepository extends JpaRepository<LessonSection, Integer> {
-    @Query(value = "SELECT u from LessonSection u WHERE u.lesson.id = ?1")
-    public List<LessonSection> findByLessonId(int lessonId);
-    @Query(value = "SELECT u.lesson from LessonSection u where u.id = ?1")
-    public Lesson findLesson(int sectionId);
+public interface SectionRepository extends MongoRepository<Section, Integer> {
+    @Query("{ 'lessonId' : ?0 }")
+    public List<Section> findSectionByLessonId(int lessonId);
 }
+

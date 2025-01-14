@@ -1,7 +1,8 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeProvider } from "@/lib/context/ThemeProvider";
 import { LessonsProvider } from "@/lib/context/lesson-provider";
+import { AuthProvider } from "@/lib/context/auth-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -13,11 +14,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <LessonsProvider>
-          <ThemeProvider attribute="class" defaultTheme="system">
-            {children}
-          </ThemeProvider>
-        </LessonsProvider>
+        <AuthProvider>
+          <LessonsProvider>
+            <ThemeProvider attribute="class" defaultTheme="system">
+              {children}
+            </ThemeProvider>
+          </LessonsProvider>
+        </AuthProvider>
       </body>
     </html>
   );

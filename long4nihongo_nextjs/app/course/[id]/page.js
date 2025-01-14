@@ -9,14 +9,17 @@ import { use } from "react";
 import Lesson from "./lesson";
 import { useLessons } from "@/lib/context/lesson-provider";
 import { FlashCardd, Word, Question } from "@/lib/class";
+import { useAuth } from "@/lib/context/auth-context";
+import { useRouter } from "next/navigation";
 
 export default function CoursePage({ params: paramsPromise }) {
+  const { user, loading } = useAuth();
+  const router = useRouter();
   const [contentType, setContentType] = useState("video");
   const [lessons, setLessons] = useState([]);
   const params = use(paramsPromise); // Unwrap the params promise
   const { dataList } = useLessons();
 
-  // Move these into state
   const [flashCards, setFlashCards] = useState([]);
   const [words, setWords] = useState([]);
   const [questions, setQuestions] = useState([]);
@@ -25,30 +28,22 @@ export default function CoursePage({ params: paramsPromise }) {
     const newFlashCards = [];
     const newWords = [];
     const newQuestions = [];
-
-    dataList.forEach((data) => {
-      if (data.type === "flash-card") {
+    dataList.flashCards != null &&
+      dataList.flashCards.forEach((data) => {
         newFlashCards.push(
-          new FlashCardd(data.type, data.word, data.meaning, data.example)
+          new FlashCardd(data.word, data.meaning, data.example)
         );
-      } else if (data.type === "word") {
-        newWords.push(
-          new Word(data.type, data.hiragana, data.kanji, data.meaning)
-        );
-      } else if (data.type === "quiz") {
+      });
+    dataList.words != null &&
+      dataList.words.forEach((data) => {
+        newWords.push(new Word(data.hiragana, data.kanji, data.meaning));
+      });
+    dataList.questions != null &&
+      dataList.questions.forEach((data) => {
         newQuestions.push(
-          new Question(
-            data.type,
-            data.question,
-            data.answer1,
-            data.answer2,
-            data.answer3,
-            data.answer4,
-            data.correctAnswer
-          )
+          new Question(data.question, data.answers, data.correctAnswer)
         );
-      }
-    });
+      });
 
     setFlashCards(newFlashCards);
     setWords(newWords);
@@ -56,11 +51,13 @@ export default function CoursePage({ params: paramsPromise }) {
   }, [dataList]);
 
   useEffect(() => {
-    apiFetch(`api/course/${params.id}/lessons`).then((data) => {
-      console.log(data);
-      setLessons(data);
-    });
-  }, [params.id]);
+    if (user) {
+      apiFetch(`api/course/${params.id}/lessons`).then((data) => {
+        console.log(data);
+        setLessons(data);
+      });
+    }
+  }, [params.id, user]);
 
   return (
     <div className="min-h-screen bg-background from-slate-950 to-slate-900">

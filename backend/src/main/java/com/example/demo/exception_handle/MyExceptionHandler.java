@@ -1,6 +1,5 @@
 package com.example.demo.exception_handle;
 
-import com.example.demo.model.JwtResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
