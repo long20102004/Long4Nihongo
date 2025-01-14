@@ -1,5 +1,6 @@
-package com.example.demo.model;
+package com.example.demo.dto;
 
+import com.example.demo.model.Course;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -11,15 +11,7 @@ export default function Section({ onSelect, isSelected, section }) {
   const handleClick = async () => {
     setIsLoading(true);
     onSelect();
-    try {
-      const data = await apiFetch(`api/section/${section.id}/content`);
-      console.log("Fetched data:", data);
-      setData(data);
-    } catch (error) {
-      console.error("Failed to fetch section content:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    setData(section);
   };
 
   return (

@@ -5,27 +5,17 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Table(name = "flash_cards")
-@Entity
+@Document(collection = "flashcards")
 @Getter
 @Setter
-@NoArgsConstructor
-public class FlashCard extends Data {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class FlashCard{
     private int id;
-    @ManyToOne
-    @JoinColumn(name = "learning_section_id")
-    @Getter(AccessLevel.NONE)
-    private LessonSection lessonSection;
-    @Column(name = "word")
+    private int sectionId;
     private String word;
-    @Column(name = "meaning")
     private String meaning;
-    @Column(name = "example")
     private String example;
 }

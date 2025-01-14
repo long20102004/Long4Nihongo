@@ -25,12 +25,14 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "email")
+    @Column(name = "username")
     private String username;
     @Column(name = "password")
     private String password;
     @Column(name = "role")
     private String role;
+    @Column(name = "name")
+    private String name;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "courses_users",
     joinColumns = @JoinColumn(name = "user_id"),

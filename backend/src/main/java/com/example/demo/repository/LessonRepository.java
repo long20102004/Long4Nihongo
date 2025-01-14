@@ -10,6 +10,4 @@ import java.util.List;
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     @Query(value = "SELECT u FROM Lesson u WHERE u.course.id = ?1")
     public List<Lesson> findByCourseId(int courseId);
-    @Query(value = "select u.course from Lesson u where u.id = ?1")
-    public Course findCourseByLessonId(int lessonId);
 }

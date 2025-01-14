@@ -1,8 +1,44 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useAuth } from "@/lib/context/auth-context";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "@/components/ui/toggle-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Mic } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { User, BookOpen, ShoppingCart, Key, LogOut } from "lucide-react";
+import { AuthModal } from "@/components/auth-model";
+import LoginPage from "@/app/login/login";
+import SignUpPage from "@/app/signup/signup";
 
 export default function Header() {
+  const { user, logout, login } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    if (user) {
+      setIsLoginModalOpen(false);
+      setIsSignUpModalOpen(false);
+    }
+  }, [user]);
+
   return (
     <header className="border-b border-border">
       <div className="container mx-auto px-4 py-4 bg-background">
@@ -29,12 +65,16 @@ export default function Header() {
             >
               <Link href="/careers">Careers</Link>
             </Button>
+
             <Button
-              variant="ghost"
-              className="text-lg text-muted-foreground hover:text-foreground transition-colors"
+              variant="outline"
+              className="text-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              onClick={() => (window.location.href = "/ai-voice-chat")}
             >
-              <Link href="/blog">Blog</Link>
+              <Mic className="mr-2 h-4 w-4" />
+              AI Voice Chat
             </Button>
+
             <Button
               variant="ghost"
               className="text-lg text-muted-foreground hover:text-foreground transition-colors"
@@ -43,24 +83,104 @@ export default function Header() {
             </Button>
           </div>
           <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              className="text-lg text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Link href="/login">Sign In</Link>
-            </Button>
-            <Button
-              variant="outline"
-              className="text-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-            >
-              <Link href="/signup">Sign Up</Link>
-            </Button>
+            {user ? (
+              <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="relative h-12 w-12 rounded-full"
+                  >
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src={user.avatarUrl} alt={user.name} />
+                      <AvatarFallback>L</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {user.name}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <BookOpen className="mr-2 h-4 w-4" />
+                    <span>My Courses</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    <span>Checkout</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Key className="mr-2 h-4 w-4" />
+                    <span>Change Password</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  className="text-lg text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => setIsLoginModalOpen(true)}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  variant="outline"
+                  className="text-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                  onClick={() => setIsSignUpModalOpen(true)}
+                >
+                  Sign Up
+                </Button>
+              </>
+            )}
             <div className="flex justify-end p-4">
               <ThemeToggle />
             </div>
           </div>
         </nav>
       </div>
+      <AuthModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      >
+        <LoginPage
+          onSignUpClick={() => {
+            setIsLoginModalOpen(false);
+            setIsSignUpModalOpen(true);
+          }}
+          onClose={() => setIsLoginModalOpen(false)}
+        />
+      </AuthModal>
+      <AuthModal
+        isOpen={isSignUpModalOpen}
+        onClose={() => setIsSignUpModalOpen(false)}
+      >
+        <SignUpPage
+          onClose={() => setIsSignUpModalOpen(false)}
+          onLoginClick={() => {
+            setIsSignUpModalOpen(false);
+            setIsLoginModalOpen(true);
+          }}
+        />
+      </AuthModal>
     </header>
   );
 }
