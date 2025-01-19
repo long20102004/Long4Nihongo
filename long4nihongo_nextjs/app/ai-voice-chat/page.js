@@ -11,7 +11,7 @@ export default function VoiceAssistant() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const recognitionRef = useRef(window.SpeechSynthesis);
+  const recognitionRef = useRef();
   const synthRef = useRef(null);
   const [lastPlayedMessageId, setLastPlayedMessageId] = useState(null);
   const isPlayingRef = useRef(false);

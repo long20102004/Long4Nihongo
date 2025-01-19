@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.dto.CourseDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -38,6 +39,14 @@ public class Course {
     @Column(name = "description")
     private String description;
     @Getter(AccessLevel.NONE)
-    @ManyToMany(mappedBy = "courseSet")
+    @ManyToMany(mappedBy = "courseSet", cascade = CascadeType.ALL)
     private Set<User> userSet;
+    @Column(name = "is_deleted")
+    private int isDeleted;
+    public Course(CourseDTO courseDTO) {
+        this.name = courseDTO.getName();
+        this.price = courseDTO.getPrice();
+        this.description = courseDTO.getDescription();
+        this.imageUrl = courseDTO.getImageUrl();
+    }
 }

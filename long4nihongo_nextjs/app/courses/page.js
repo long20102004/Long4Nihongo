@@ -7,6 +7,7 @@ import { CoursePath } from "@/components/course-path";
 import SubtleParticleBackground from "@/components/ui/snow-effect";
 import SiteHeader from "@/components/site-header";
 import { apiFetch } from "@/lib/api-fetch";
+
 export default function CourseJourney() {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -14,14 +15,17 @@ export default function CourseJourney() {
     offset: ["start start", "end end"],
   });
   const [courses, setCourseData] = useState([]);
+
   useEffect(() => {
-    apiFetch("api/courses").then((data) => {
-      setCourseData(data);
-    });
+    apiFetch("api/courses")
+      .then((response) => response.json())
+      .then((data) => {
+        setCourseData(data);
+      });
   }, []);
 
   return (
-    <div className="min-h-screen bg-background from-slate-900 to-slate-800 text-white">
+    <div className="min-h-screen bg-background dark:from-slate-900 dark:to-slate-800 text-slate-900 dark:text-white">
       <SubtleParticleBackground />
       <SiteHeader />
       <motion.h1

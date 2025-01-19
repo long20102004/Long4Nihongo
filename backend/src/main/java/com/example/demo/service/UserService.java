@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.model.Course;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -45,6 +48,11 @@ public class UserService implements UserDetailsService {
         catch (EmptyResultDataAccessException e){
             return null;
         }
-
+    }
+    public Set<Course> findCourseByUsername(String username){
+        return userRepository.findCourseByUsername(username);
+    }
+    public List<User> findAll(){
+        return userRepository.findAll();
     }
 }

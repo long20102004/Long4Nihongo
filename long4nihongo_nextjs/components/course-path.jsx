@@ -23,8 +23,8 @@ export function CoursePath({ progress }) {
       />
       <defs>
         <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#2dd4bf" />
-          <stop offset="100%" stopColor="#0d9488" />
+          <stop offset="0%" stopColor="var(--color-primary)" />
+          <stop offset="100%" stopColor="var(--color-primary-dark)" />
         </linearGradient>
       </defs>
     </svg>

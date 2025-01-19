@@ -1,5 +1,5 @@
 export async function apiFetch(url, options = {}) {
-  const baseUrl = "";
+  const baseUrl = "http://localhost:8080";
   const finalUrl = url.startsWith("http") ? url : `${baseUrl}/${url}`;
   const { method = "GET", ...restOptions } = options;
   const response = await fetch(finalUrl, {
@@ -7,10 +7,7 @@ export async function apiFetch(url, options = {}) {
     credentials: "include",
     ...restOptions,
   });
-
   if (!response.ok) {
     throw new Error(`API call failed: ${response.statusText}`);
-  }
-  if (method === "GET") return response.json();
-  else return response;
+  } else return response;
 }

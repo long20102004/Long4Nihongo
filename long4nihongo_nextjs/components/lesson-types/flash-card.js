@@ -9,20 +9,19 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import Image from "next/image";
 export function FlashCard({ flashcards }) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(2); // Start with card 33
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
   const currentCard = flashcards[currentIndex];
-  const learned = currentIndex - 2; // Number of cards learned (before current)
-  const remaining = flashcards.length - (currentIndex + 1); // Number of cards remaining (after current)
+  const learned = flashcards.length - (currentIndex + 1);
+  const remaining = currentIndex;
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setDirection(-1);
-      // setIsFlipped(false);
       setCurrentIndex(currentIndex - 1);
     }
   };
@@ -30,28 +29,25 @@ export function FlashCard({ flashcards }) {
   const handleNext = () => {
     if (currentIndex < flashcards.length - 1) {
       setDirection(1);
-      // setIsFlipped(false);
       setCurrentIndex(currentIndex + 1);
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto space-y-4">
-      {/* Navigation */}
       <div className="flex items-center justify-center space-x-4 text-lg font-medium">
-        <span className="text-red-500">{learned}</span>
-        <span className="text-slate-400">←</span>
-        <span className="text-white">{currentIndex}</span>
-        <span className="text-slate-400">→</span>
-        <span className="text-green-500">{remaining}</span>
+        <span className="text-red-500 dark:text-red-400">{learned}</span>
+        <span className="text-slate-600 dark:text-slate-400">←</span>
+        <span className="text-slate-900 dark:text-white">{currentIndex}</span>
+        <span className="text-slate-600 dark:text-slate-400">→</span>
+        <span className="text-green-600 dark:text-green-400">{remaining}</span>
       </div>
 
-      {/* Card */}
       <div className="relative w-full perspective">
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={`${currentCard.id}-${isFlipped ? "back" : "front"}`}
-            className="w-full bg-slate-800 rounded-xl shadow-lg border border-slate-700"
+            className="w-full bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700"
             initial={{
               rotateY: direction === 1 ? -90 : 90,
               x: direction === 1 ? 100 : -100,
@@ -73,22 +69,25 @@ export function FlashCard({ flashcards }) {
           >
             <div className="p-6 space-y-4">
               <div className="aspect-square flex items-center justify-center">
-                <img
-                  src={currentCard.image}
+                <Image
+                  src={currentCard.imgUrl}
                   alt="Illustration"
-                  className="w-48 h-48 object-contain"
+                  width={360} // Adjust the width as needed
+                  height={360} // Adjust the height as needed
+                  className="object-contain rounded-lg"
+                  priority
                 />
               </div>
               <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold text-white">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                   {isFlipped ? currentCard.word : currentCard.meaning}
                 </h2>
-                <p className="text-lg text-slate-400">
-                  {isFlipped ? currentCard.word : currentCard.meaning}
+                <p className="text-lg text-slate-600 dark:text-slate-400">
+                  {isFlipped ? currentCard.example : currentCard.example}
                 </p>
               </div>
-              <div className="flex items-center justify-between pt-4 border-t border-slate-700">
-                <div className="flex items-center space-x-4 text-slate-400">
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex items-center space-x-4 text-slate-600 dark:text-slate-400">
                   <div className="flex items-center">
                     <ThumbsUp className="w-4 h-4 mr-1" />
                     <span>{currentCard.likes}</span>
@@ -104,26 +103,19 @@ export function FlashCard({ flashcards }) {
         </AnimatePresence>
       </div>
 
-      {/* Controls */}
       <div className="flex items-center justify-between w-full space-x-4">
         <Button
-          className="flex-1 bg-slate-700 hover:bg-slate-600 text-white"
-          onClick={handleNext}
-          disabled={currentIndex === flashcards.length - 1}
+          className="flex-1 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-900 dark:text-white"
+          onClick={handlePrevious}
+          disabled={currentIndex === 0}
         >
           <ChevronLeft className="w-5 h-5 mr-2" />
           Previous
         </Button>
-        {/* <Button
-          className="bg-slate-700 hover:bg-slate-600 text-white px-3"
-          onClick={handleFlip}
-        >
-          <RotateCcw className="w-5 h-5" />
-        </Button> */}
         <Button
-          className="flex-1 bg-slate-700 hover:bg-slate-600 text-white"
-          onClick={handlePrevious}
-          disabled={currentIndex === 0}
+          className="flex-1 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-900 dark:text-white"
+          onClick={handleNext}
+          disabled={currentIndex === flashcards.length - 1}
         >
           Next
           <ChevronRight className="w-5 h-5 ml-2" />

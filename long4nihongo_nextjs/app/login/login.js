@@ -23,7 +23,7 @@ export default function LoginPage({ onSignUpClick, onClose }) {
     setError("");
     try {
       await login(username, password);
-      // Close the modal after successful login
+
       onClose();
     } catch (err) {
       setError("Failed to log in");

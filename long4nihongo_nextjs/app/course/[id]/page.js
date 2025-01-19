@@ -13,13 +13,11 @@ import { useAuth } from "@/lib/context/auth-context";
 import { useRouter } from "next/navigation";
 
 export default function CoursePage({ params: paramsPromise }) {
-  const { user, loading } = useAuth();
-  const router = useRouter();
+  const { user } = useAuth();
   const [contentType, setContentType] = useState("video");
   const [lessons, setLessons] = useState([]);
-  const params = use(paramsPromise); // Unwrap the params promise
+  const params = use(paramsPromise);
   const { dataList } = useLessons();
-
   const [flashCards, setFlashCards] = useState([]);
   const [words, setWords] = useState([]);
   const [questions, setQuestions] = useState([]);
@@ -31,7 +29,7 @@ export default function CoursePage({ params: paramsPromise }) {
     dataList.flashCards != null &&
       dataList.flashCards.forEach((data) => {
         newFlashCards.push(
-          new FlashCardd(data.word, data.meaning, data.example)
+          new FlashCardd(data.word, data.meaning, data.example, data.imgUrl)
         );
       });
     dataList.words != null &&
@@ -44,29 +42,28 @@ export default function CoursePage({ params: paramsPromise }) {
           new Question(data.question, data.answers, data.correctAnswer)
         );
       });
-
+    console.log(newFlashCards);
     setFlashCards(newFlashCards);
     setWords(newWords);
     setQuestions(newQuestions);
-  }, [dataList]);
+  }, [params.id, user, dataList]);
 
   useEffect(() => {
-    if (user) {
-      apiFetch(`api/course/${params.id}/lessons`).then((data) => {
-        console.log(data);
+    apiFetch(`api/course/${params.id}/lessons`)
+      .then((response) => response.json())
+      .then((data) => {
         setLessons(data);
       });
-    }
-  }, [params.id, user]);
+  }, [params.id, user, dataList]);
 
   return (
-    <div className="min-h-screen bg-background from-slate-950 to-slate-900">
+    <div className="min-h-screen bg-background dark:bg-background">
       <SiteHeader></SiteHeader>
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-12 gap-8">
           <div className="col-span-3">
-            <div className="rounded-xl bg-slate-900/50 backdrop-blur p-6 border border-slate-800 sticky top-8">
-              <h2 className="text-xl font-semibold text-white mb-4">
+            <div className="rounded-xl bg-background dark:bg-slate-800/50 backdrop-blur p-6 border border-slate-200 dark:border-slate-700 sticky top-8">
+              <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
                 Course Contents
               </h2>
               <div className="space-y-4">
@@ -77,7 +74,7 @@ export default function CoursePage({ params: paramsPromise }) {
             </div>
           </div>
           <div className="col-span-9">
-            <div className="rounded-xl bg-slate-900/50 backdrop-blur p-6 border border-slate-800">
+            <div className="rounded-xl bg-background dark:bg-slate-800/50 backdrop-blur p-6 border border-slate-200 dark:border-slate-700">
               <ContentTypeSwitcher
                 activeType={contentType}
                 onChange={setContentType}
@@ -85,8 +82,10 @@ export default function CoursePage({ params: paramsPromise }) {
 
               <div className="aspect-video mb-8">
                 {contentType === "video" && (
-                  <div className="w-full h-full bg-slate-800 rounded-lg flex items-center justify-center">
-                    <p className="text-slate-400">Video content goes here</p>
+                  <div className="w-full h-full bg-white dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                    <p className="text-slate-600 dark:text-slate-400">
+                      Video content goes here
+                    </p>
                   </div>
                 )}
 

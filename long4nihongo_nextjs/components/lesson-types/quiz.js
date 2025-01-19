@@ -26,10 +26,10 @@ export function Quiz({ questions }) {
   return (
     <div className="w-full max-w-3xl mx-auto">
       <div className="mb-8">
-        <div className="text-xl font-semibold text-white mb-2">
+        <div className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
           Question {currentQuestion + 1} of {questions.length}
         </div>
-        <div className="h-2 bg-slate-700 rounded-full">
+        <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full">
           <div
             className="h-2 bg-teal-500 rounded-full transition-all duration-500"
             style={{
@@ -39,8 +39,8 @@ export function Quiz({ questions }) {
         </div>
       </div>
 
-      <div className="bg-slate-800 rounded-xl p-8 mb-8">
-        <h2 className="text-2xl font-bold text-white mb-8">
+      <div className="bg-white dark:bg-slate-800 rounded-xl p-8 mb-8">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">
           {questions[currentQuestion].question}
         </h2>
 
@@ -54,13 +54,13 @@ export function Quiz({ questions }) {
                 "h-24 text-lg",
                 selectedAnswer === index &&
                   index === questions[currentQuestion].correctAnswer &&
-                  "bg-green-500",
+                  "bg-green-500 dark:bg-green-600",
                 selectedAnswer === index &&
                   index !== questions[currentQuestion].correctAnswer &&
-                  "bg-red-500",
+                  "bg-red-500 dark:bg-red-600",
                 selectedAnswer !== null &&
                   index === questions[currentQuestion].correctAnswer &&
-                  "bg-green-500"
+                  "bg-green-500 dark:bg-green-600"
               )}
             >
               {option}
@@ -69,7 +69,7 @@ export function Quiz({ questions }) {
         </div>
       </div>
 
-      <div className="text-center text-xl font-semibold text-white">
+      <div className="text-center text-xl font-semibold text-slate-900 dark:text-white">
         Score: {score} / {questions.length}
       </div>
     </div>

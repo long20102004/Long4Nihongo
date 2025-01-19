@@ -32,16 +32,9 @@ export default function Header() {
     setIsOpen(false);
   };
 
-  useEffect(() => {
-    if (user) {
-      setIsLoginModalOpen(false);
-      setIsSignUpModalOpen(false);
-    }
-  }, [user]);
-
   return (
-    <header className="border-b border-border">
-      <div className="container mx-auto px-4 py-4 bg-background">
+    <header className="border-b border-slate-200 dark:border-slate-700">
+      <div className="container mx-auto px-4 py-4 bg-background dark:bg-background">
         <nav className="flex items-center justify-between">
           <Link href="/" className="text-3xl font-bold text-primary">
             ABCD
@@ -49,19 +42,19 @@ export default function Header() {
           <div className="hidden md:flex items-center space-x-6">
             <Button
               variant="ghost"
-              className="text-lg text-muted-foreground hover:text-foreground transition-colors"
+              className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               <Link href="/">Home</Link>
             </Button>
             <Button
               variant="ghost"
-              className="text-lg text-muted-foreground hover:text-foreground transition-colors"
+              className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               <Link href="/courses">Courses</Link>
             </Button>
             <Button
               variant="ghost"
-              className="text-lg text-muted-foreground hover:text-foreground transition-colors"
+              className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               <Link href="/careers">Careers</Link>
             </Button>
@@ -77,13 +70,13 @@ export default function Header() {
 
             <Button
               variant="ghost"
-              className="text-lg text-muted-foreground hover:text-foreground transition-colors"
+              className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               <Link href="/about">About Us</Link>
             </Button>
           </div>
           <div className="flex items-center space-x-4">
-            {user ? (
+            {localStorage.getItem("active") == 1 ? (
               <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -91,7 +84,10 @@ export default function Header() {
                     className="relative h-12 w-12 rounded-full"
                   >
                     <Avatar className="h-12 w-12">
-                      <AvatarImage src={user.avatarUrl} alt={user.name} />
+                      <AvatarImage
+                        src={user !== null ? user.avatarUrl : ""}
+                        alt={user !== null ? user.name : ""}
+                      />
                       <AvatarFallback>L</AvatarFallback>
                     </Avatar>
                   </Button>
@@ -100,10 +96,10 @@ export default function Header() {
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">
-                        {user.name}
+                        {user !== null ? user.name : ""}
                       </p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user.email}
+                      <p className="text-xs leading-none text-slate-500 dark:text-slate-400">
+                        {user !== null ? user.email : ""}
                       </p>
                     </div>
                   </DropdownMenuLabel>
@@ -114,17 +110,23 @@ export default function Header() {
                       <span>Profile</span>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    <span>My Courses</span>
+                  <DropdownMenuItem asChild>
+                    <Link href="/my-course">
+                      <BookOpen className="mr-2 h-4 w-4" />
+                      <span>My Courses</span>
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    <span>Checkout</span>
+                  <DropdownMenuItem asChild>
+                    <Link href="/checkout">
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      <span>Checkout</span>
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Key className="mr-2 h-4 w-4" />
-                    <span>Change Password</span>
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile/change-password">
+                      <Key className="mr-2 h-4 w-4" />
+                      <span>Change Password</span>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
@@ -137,7 +139,7 @@ export default function Header() {
               <>
                 <Button
                   variant="ghost"
-                  className="text-lg text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
                   onClick={() => setIsLoginModalOpen(true)}
                 >
                   Sign In

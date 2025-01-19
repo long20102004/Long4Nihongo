@@ -33,6 +33,8 @@ public class User implements UserDetails {
     private String role;
     @Column(name = "name")
     private String name;
+    @Column(name = "is_deleted")
+    private int isDeleted;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "courses_users",
     joinColumns = @JoinColumn(name = "user_id"),
