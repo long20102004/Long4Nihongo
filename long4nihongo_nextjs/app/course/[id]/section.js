@@ -17,10 +17,12 @@ export default function Section({ onSelect, isSelected, section }) {
   return (
     <Button
       onClick={handleClick}
-      disabled={isLoading}
+      // disabled={isLoading}
       variant="ghost"
-      className={`w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800/50 h-auto py-2 transition-colors duration-200 ${
-        isSelected ? "bg-slate-600 text-white" : ""
+      className={`w-full justify-start text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700/50 h-auto py-2 transition-colors duration-200 ${
+        isSelected
+          ? "bg-slate-300 dark:bg-slate-600 text-slate-900 dark:text-white"
+          : ""
       }`}
       aria-pressed={isSelected}
     >

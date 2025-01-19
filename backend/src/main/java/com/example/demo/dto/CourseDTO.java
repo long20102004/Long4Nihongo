@@ -1,6 +1,8 @@
 package com.example.demo.dto;
 
 import com.example.demo.model.Course;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

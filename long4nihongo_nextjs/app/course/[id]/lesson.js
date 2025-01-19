@@ -13,14 +13,20 @@ import {
 import Section from "./section";
 import { apiFetch } from "@/lib/api-fetch";
 import { useEffect, useState } from "react";
-
+import { useAuth } from "@/lib/context/auth-context";
 export default function Lesson({ lesson }) {
   const [sections, setSection] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
+  const { user } = useAuth();
   useEffect(() => {
-    apiFetch(`api/lessons/${lesson.id}/sections`).then((data) => {
-      setSection(data);
-    });
+    if (user) {
+      console.log("alo");
+      apiFetch(`api/lessons/${lesson.id}/sections`)
+        .then((response) => response.json())
+        .then((data) => {
+          setSection(data);
+        });
+    }
   }, []);
   const handleSectionSelect = (sectionId) => {
     setSelectedSectionId(sectionId);
@@ -28,16 +34,16 @@ export default function Lesson({ lesson }) {
   return (
     <Collapsible>
       <CollapsibleTrigger className="w-full">
-        <div className="flex items-center justify-between w-full p-4 rounded-lg bg-slate-800/50 hover:bg-slate-800/80 transition-colors group">
+        <div className="flex items-center justify-between w-full p-4 rounded-lg bg-slate-200 dark:bg-slate-700/50 hover:bg-slate-300 dark:hover:bg-slate-600/80 transition-colors group">
           <div className="flex items-center gap-3">
-            <PlayCircle className="w-5 h-5 text-teal-500 flex-shrink-0" />
+            <PlayCircle className="w-5 h-5 text-teal-600 dark:text-teal-400 flex-shrink-0" />
             <div className="min-w-0 text-left flex-1">
-              <h3 className="font-medium text-white break-words">
+              <h3 className="font-medium text-slate-900 dark:text-white break-words">
                 {lesson.name}
               </h3>
             </div>
           </div>
-          <ChevronDown className="w-5 h-5 text-teal-500 flex-shrink-0" />
+          <ChevronDown className="w-5 h-5 text-teal-600 dark:text-teal-400 flex-shrink-0" />
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>

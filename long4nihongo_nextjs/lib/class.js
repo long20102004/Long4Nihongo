@@ -1,8 +1,9 @@
 export class FlashCardd {
-  constructor(word, meaning, example) {
+  constructor(word, meaning, example, imgUrl) {
     this.word = word;
     this.meaning = meaning;
     this.example = example;
+    this.imgUrl = imgUrl;
   }
 }
 

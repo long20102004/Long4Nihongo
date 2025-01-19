@@ -1,47 +1,53 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Trash2, Edit } from 'lucide-react'
-
-const mockUsers = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Teacher' },
-  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Student' },
-]
-
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Trash2, Edit } from "lucide-react";
+import UserCourseManagement from "./UserCourseManagement";
+import { apiFetch } from "@/lib/api-fetch";
 export default function UserManagement() {
-  const [users, setUsers] = useState(mockUsers)
-  const [newUser, setNewUser] = useState({ name: '', email: '', role: '' })
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    apiFetch("admin/users")
+      .then((response) => response.json())
+      .then((data) => setUsers(data));
+  }, []);
+
+  const [newUser, setNewUser] = useState({ name: "", email: "", role: "" });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setNewUser(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setNewUser((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleAddUser = (e) => {
-    e.preventDefault()
-    setUsers(prev => [...prev, { id: prev.length + 1, ...newUser }])
-    setNewUser({ name: '', email: '', role: '' })
-  }
+    e.preventDefault();
+    setUsers((prev) => [...prev, { id: prev.length + 1, ...newUser }]);
+    setNewUser({ name: "", email: "", role: "" });
+  };
 
   const handleDeleteUser = (id) => {
-    setUsers(prev => prev.filter(user => user.id !== id))
-  }
+    setUsers((prev) => prev.filter((user) => user.id !== id));
+  };
 
   return (
     <div className="space-y-6">
       <div className="bg-gray-800 shadow px-4 py-5 sm:rounded-lg sm:p-6">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
-            <h3 className="text-lg font-medium leading-6 text-gray-100">Add New User</h3>
+            <h3 className="text-lg font-medium leading-6 text-gray-100">
+              Add New User
+            </h3>
           </div>
           <div className="mt-5 md:mt-0 md:col-span-2">
             <form onSubmit={handleAddUser}>
               <div className="grid grid-cols-6 gap-6">
                 <div className="col-span-6 sm:col-span-3">
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-300">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-300"
+                  >
                     Name
                   </label>
                   <Input
@@ -55,7 +61,10 @@ export default function UserManagement() {
                   />
                 </div>
                 <div className="col-span-6 sm:col-span-3">
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-300"
+                  >
                     Email
                   </label>
                   <Input
@@ -69,7 +78,10 @@ export default function UserManagement() {
                   />
                 </div>
                 <div className="col-span-6 sm:col-span-3">
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-300">
+                  <label
+                    htmlFor="role"
+                    className="block text-sm font-medium text-gray-300"
+                  >
                     Role
                   </label>
                   <select
@@ -88,7 +100,12 @@ export default function UserManagement() {
                 </div>
               </div>
               <div className="mt-5">
-                <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700">Add User</Button>
+                <Button
+                  type="submit"
+                  className="bg-indigo-600 hover:bg-indigo-700"
+                >
+                  Add User
+                </Button>
               </div>
             </form>
           </div>
@@ -106,13 +123,22 @@ export default function UserManagement() {
                     <table className="min-w-full divide-y divide-gray-700">
                       <thead className="bg-gray-700">
                         <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                          >
                             Name
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                          >
                             Email
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                          >
                             Role
                           </th>
                           <th scope="col" className="relative px-6 py-3">
@@ -124,10 +150,14 @@ export default function UserManagement() {
                         {users.map((user) => (
                           <tr key={user.id}>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-medium text-gray-100">{user.name}</div>
+                              <div className="text-sm font-medium text-gray-100">
+                                {user.name}
+                              </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-300">{user.email}</div>
+                              <div className="text-sm text-gray-300">
+                                {user.username}
+                              </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
@@ -135,7 +165,11 @@ export default function UserManagement() {
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              <Button variant="outline" onClick={() => handleDeleteUser(user.id)} className="text-indigo-400 hover:text-indigo-300">
+                              <Button
+                                variant="outline"
+                                onClick={() => handleDeleteUser(user.id)}
+                                className="text-indigo-400 hover:text-indigo-300"
+                              >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </td>
@@ -150,7 +184,10 @@ export default function UserManagement() {
           </div>
         </div>
       </div>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8">User Management</h1>
+        <UserCourseManagement receiveUsers={users} />
+      </div>
     </div>
-  )
+  );
 }
-

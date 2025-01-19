@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.dto.LessonDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,9 @@ public class Lesson {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
+    @Column(name = "is_deleted")
+    private int isDeleted;
+    public Lesson(LessonDTO lessonDTO) {
+        this.name = lessonDTO.getName();
+    }
 }

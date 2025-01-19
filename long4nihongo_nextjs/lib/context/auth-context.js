@@ -1,8 +1,9 @@
 "use client";
 
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { apiFetch } from "../api-fetch";
+import { useCourses } from "@/lib/context/course-provider";
 
 const AuthContext = createContext();
 
@@ -10,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { setMyCourse } = useCourses();
 
   useEffect(() => {
     const checkLoggedIn = async () => {
@@ -22,11 +24,12 @@ export const AuthProvider = ({ children }) => {
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
-          console.log("logged");
         } else {
           console.log("not");
         }
       } catch (error) {
+        localStorage.setItem("active", 0);
+        localStorage.setItem("crs", null);
         console.error("Failed to fetch user data", error);
       } finally {
         setLoading(false);
@@ -45,10 +48,17 @@ export const AuthProvider = ({ children }) => {
     if (response.ok) {
       const userData = await response.json();
       setUser(userData);
+      const coursesResponse = await apiFetch("api/my-courses");
+      const myCourses = await coursesResponse.json();
+      setMyCourse(myCourses);
+      localStorage.setItem("active", 1);
+      localStorage.setItem("crs", JSON.stringify(myCourses));
+      window.location.reload();
     } else {
       throw new Error("Login failed");
     }
   };
+
   const signup = async (name, username, password) => {
     try {
       const response = await apiFetch("api/register", {
@@ -71,7 +81,10 @@ export const AuthProvider = ({ children }) => {
       await apiFetch("api/logout", {
         method: "POST",
       });
+      localStorage.setItem("active", 0);
+      localStorage.setItem("crs", null);
       setUser(null);
+      router.push("/");
     } catch (error) {
       console.error("Logout error", error);
     }
