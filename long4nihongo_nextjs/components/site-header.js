@@ -28,11 +28,14 @@ export default function Header({
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
-
+  const [isClient, setIsClient] = useState(false);
   const handleLogout = async () => {
     await logout();
     setIsOpen(false);
   };
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   // useEffect(() => {
   //   setIsLoginModalOpen(onTriggerLogin);
   // }, [onTriggerLogin]);
@@ -86,7 +89,7 @@ export default function Header({
             </Button>
           </div>
           <div className="flex items-center space-x-4">
-            {localStorage.getItem("active") == 1 ? (
+            {isClient && localStorage.getItem("active") == 1 ? (
               <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button
