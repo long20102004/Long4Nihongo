@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.CourseDTO;
-import com.example.demo.dto.FlashCardDTO;
-import com.example.demo.dto.QuestionDTO;
-import com.example.demo.dto.WordDTO;
+import com.example.demo.dto.*;
 import com.example.demo.model.*;
 import com.example.demo.service.data_service.FlashCardService;
 import com.example.demo.service.UserService;
@@ -12,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +41,7 @@ public class CourseController {
         System.out.println("Courses of user: " + username);
         for (Course course : myCourse) {
             CourseDTO courseDTO = new CourseDTO(course);
+            System.out.println("url: " + courseDTO.getImageUrl());
             courseDTOList.add(courseDTO);
             System.out.println(courseDTO.getName());
         }
@@ -65,13 +64,16 @@ public class CourseController {
                 questionDTOList.add(new QuestionDTO(question));
             }
             return questionDTOList;
-        } else {
+        } else if (type.equals("words")){
             List<Word> words = wordService.findBySectionId(sectionId);
             List<WordDTO> wordDTOList = new ArrayList<>();
             for (Word word : words) {
                 wordDTOList.add(new WordDTO(word));
             }
             return wordDTOList;
+        }
+        else{
+            return Collections.singletonList(sectionService.findById(sectionId).getVideoUrl());
         }
     }
 
@@ -87,21 +89,43 @@ public class CourseController {
     }
 
     @GetMapping("/course/{courseId}/lessons")
-    public List<Lesson> getLesson(@PathVariable int courseId) {
-        return lessonService.findByCourseId(courseId);
+    public List<LessonDTO> getLessons(@PathVariable int courseId, HttpSession session) {
+        boolean userHasCourse = userService.checkIfUserHasCourse(session, courseId);
+        List<Lesson> lessons = lessonService.findByCourseId(courseId);
+        List<LessonDTO> lessonDTOs = new ArrayList<>();
+        for (Lesson lesson : lessons) {
+            LessonDTO lessonDTO = new LessonDTO(lesson);
+            if (!userHasCourse && lesson.getIsDemo() == 0) {
+                lessonDTO.setName("Mua khóa học để xem chi tiết");
+            }
+            lessonDTOs.add(lessonDTO);
+        }
+        return lessonDTOs;
     }
 
     @GetMapping("/lessons/{lessonId}/sections")
-    public List<Section> getSection(@PathVariable int lessonId) {
-        String usernamee = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(usernamee);
+    public List<SectionDTO> getSection(@PathVariable int lessonId, HttpSession session) {
+        Lesson lesson = lessonService.findById(lessonId);
+        boolean userHasCourse = userService.checkIfUserHasCourse(session, lesson.getCourse().getId());
         List<Section> sections = sectionService.findSectionByLessonId(lessonId);
+        List<SectionDTO> sectionDTOS = new ArrayList<>();
         for (Section section : sections) {
-            section.setWords(wordService.findBySectionId(section.getId()));
-            section.setFlashCards(flashCardService.findBySectionId(section.getId()));
-            section.setQuestions(questionService.findBySectionId(section.getId()));
+            SectionDTO sectionDTO = new SectionDTO(section);
+            if (userHasCourse || section.getIsDemo() == 1) {
+                sectionDTO.setWords(wordService.findBySectionId(section.getId()));
+                sectionDTO.setFlashCards(flashCardService.findBySectionId(section.getId()));
+                sectionDTO.setQuestions(questionService.findBySectionId(section.getId()));
+            } else {
+                sectionDTO.setName("Mua khóa học để xem chi tiết");
+            }
+            sectionDTOS.add(sectionDTO);
         }
-        return sections;
+        return sectionDTOS;
     }
-
+    @PostMapping("/check-course/{courseId}")
+    public ResponseEntity<Boolean> checkUserCourse(@PathVariable int courseId, HttpSession session) {
+        System.out.println("check has course");
+        boolean userHasCourse = userService.checkIfUserHasCourse(session, courseId);
+        return ResponseEntity.ok(userHasCourse);
+    }
 }

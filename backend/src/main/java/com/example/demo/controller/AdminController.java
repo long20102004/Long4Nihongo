@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin")
@@ -36,8 +37,17 @@ public class AdminController {
         return data;
     }
 
+    @GetMapping("/")
+    public String alo(){
+        return "alo";
+    }
     @GetMapping("/courses")
     public List<CourseAdminDTO> getAllCoursesAndData() {
+//        for (FlashCard flashCard : flashCardService.findAll()){
+//            String url = FileController.imageBucketUrl + flashCard.getMeaning().toLowerCase() + ".png";
+//            flashCard.setImgUrl(url);
+//            flashCardService.save(flashCard);
+//        }
         List<Course> courses = courseService.findAll();
         List<CourseAdminDTO> courseAdminDTOS = new ArrayList<>();
         for (Course course : courses) {
@@ -177,7 +187,7 @@ public class AdminController {
     }
 
     @PostMapping("/update-lesson")
-    public LessonDTO updateLesson( @RequestBody LessonDTO lessonDTO) {
+    public LessonDTO updateLesson(@RequestBody LessonDTO lessonDTO) {
         Lesson lesson = lessonService.findById(lessonDTO.getId());
         BeanUtils.copyProperties(lessonDTO, lesson, "id");
         lessonService.save(lesson);
@@ -185,10 +195,33 @@ public class AdminController {
     }
 
     @PostMapping("/update-section")
-    public SectionDTO updateSection( @RequestBody SectionDTO sectionDTO) {
+    public SectionDTO updateSection(@RequestBody SectionDTO sectionDTO) {
         Section section = sectionService.findById(sectionDTO.getId());
         BeanUtils.copyProperties(sectionDTO, section, "id");
         sectionService.save(section);
         return sectionDTO;
+    }
+
+    @PostMapping("/add-course/{userId}/{courseId}")
+    public void addCourseToUser(@PathVariable Integer userId, @PathVariable Integer courseId) {
+        User user = userService.findById(userId);
+        Set<Course> currentCourses = user.getCourseSet();
+        currentCourses.add(courseService.findById(courseId));
+        user.setCourseSet(currentCourses);
+        userService.save(user);
+    }
+
+    @DeleteMapping("/delete-course/{userId}/{courseId}")
+    public void deleteCourseFromUser(@PathVariable Integer userId, @PathVariable Integer courseId) {
+        User user = userService.findById(userId);
+        Set<Course> currentCourses = user.getCourseSet();
+        Course courseToRemove = courseService.findById(courseId);
+        currentCourses.remove(courseToRemove);
+        user.setCourseSet(currentCourses);
+        userService.save(user);
+    }
+    @DeleteMapping("/delete-user/{userId}")
+    public void deleteUser(@PathVariable Integer userId){
+        userService.deleteById(userId);
     }
 }

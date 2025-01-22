@@ -22,6 +22,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { apiFetch } from "@/lib/api-fetch";
 
 export default function UserCourseManagement({ receiveUsers }) {
   const [users, setUsers] = useState([]);
@@ -30,10 +31,16 @@ export default function UserCourseManagement({ receiveUsers }) {
   const [selectedCourse, setSelectedCourse] = useState("");
 
   useEffect(() => {
-    console.log(receiveUsers);
+    apiFetch("api/courses")
+      .then((response) => response.json())
+      .then((data) => {
+        setAvailableCourses(data);
+      });
+    setUsers(receiveUsers);
+  }, []);
+  useEffect(() => {
     setUsers(receiveUsers);
   }, [receiveUsers]);
-
   const addCourseToUser = () => {
     if (selectedUser && selectedCourse) {
       const courseToAdd = availableCourses.find(
@@ -51,6 +58,10 @@ export default function UserCourseManagement({ receiveUsers }) {
         setSelectedUser({
           ...selectedUser,
           courses: [...selectedUser.courses, newCourse],
+        });
+
+        apiFetch(`admin/add-course/${selectedUser.id}/${newCourse.id}`, {
+          method: "POST",
         });
         setSelectedCourse("");
       }
@@ -76,6 +87,9 @@ export default function UserCourseManagement({ receiveUsers }) {
         courses: selectedUser.courses.filter(
           (course) => course.id !== courseId
         ),
+      });
+      apiFetch(`admin/delete-course/${selectedUser.id}/${courseId}`, {
+        method: "DELETE",
       });
     }
   };
@@ -211,10 +225,10 @@ export default function UserCourseManagement({ receiveUsers }) {
                   <SelectTrigger>
                     <SelectValue placeholder="Select a course to add" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-900">
                     {availableCourses.map((course) => (
                       <SelectItem key={course.id} value={course.id.toString()}>
-                        {course.title}
+                        {course.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

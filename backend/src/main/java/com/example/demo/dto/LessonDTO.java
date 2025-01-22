@@ -14,8 +14,10 @@ public class LessonDTO {
     private int id;
     private String name;
     private int courseId;
+    private int isDemo;
     public LessonDTO(Lesson lesson) {
         this.id = lesson.getId();
         this.name = lesson.getName();
+        this.isDemo = lesson.getIsDemo();
     }
 }

@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["api.vietqr.io", "github.com"],
+    domains: ["api.vietqr.io", "github.com", "cdn.long4nihongo.online"],
   },
   // async rewrites() {
   //   return [

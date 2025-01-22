@@ -16,11 +16,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkLoggedIn = async () => {
       try {
-        console.log("sent");
         const response = await apiFetch("api/user", {
           method: "POST",
         });
-        console.log("Response status:", response.status);
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
@@ -48,12 +46,7 @@ export const AuthProvider = ({ children }) => {
     if (response.ok) {
       const userData = await response.json();
       setUser(userData);
-      const coursesResponse = await apiFetch("api/my-courses");
-      const myCourses = await coursesResponse.json();
-      setMyCourse(myCourses);
       localStorage.setItem("active", 1);
-      localStorage.setItem("crs", JSON.stringify(myCourses));
-      window.location.reload();
     } else {
       throw new Error("Login failed");
     }

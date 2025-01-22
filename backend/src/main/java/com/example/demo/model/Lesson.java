@@ -23,6 +23,8 @@ public class Lesson {
     private Course course;
     @Column(name = "is_deleted")
     private int isDeleted;
+    @Column(name = "is_demo")
+    private int isDemo;
     public Lesson(LessonDTO lessonDTO) {
         this.name = lessonDTO.getName();
     }

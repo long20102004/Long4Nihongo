@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit, Book, HelpCircle, BookOpen } from "lucide-react";
+import { Trash2, Edit, Book, HelpCircle, BookOpen, File } from "lucide-react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
@@ -17,7 +17,7 @@ export default function Sections({ sections, onEdit, onDelete }) {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null);
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {sections.map((section) => (
         <Card
           key={section.id}
@@ -60,7 +60,7 @@ export default function Sections({ sections, onEdit, onDelete }) {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex space-x-2 mt-2">
+            <div className="flex flex-wrap gap-2 mt-2">
               <Button
                 onClick={() => {
                   setSelectedSection(section.id);
@@ -97,10 +97,22 @@ export default function Sections({ sections, onEdit, onDelete }) {
                 <BookOpen className="mr-2 h-4 w-4" />
                 Words
               </Button>
+              <Button
+                onClick={() => {
+                  setSelectedSection(section.id);
+                  setSelectedType("content");
+                }}
+                variant="outline"
+                size="sm"
+                className="text-purple-400 border-purple-400 hover:bg-purple-400 hover:text-white"
+              >
+                <File className="mr-2 h-4 w-4" />
+                Content
+              </Button>
             </div>
             {selectedType && selectedSection === section.id && (
               <Link href={`/section/${section.id}/${selectedType}`}>
-                <Button className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+                <Button className="mt-4 w-full bg-gray-700 hover:bg-gray-600 text-white">
                   View {selectedType}
                 </Button>
               </Link>

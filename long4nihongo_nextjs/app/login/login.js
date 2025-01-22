@@ -26,7 +26,7 @@ export default function LoginPage({ onSignUpClick, onClose }) {
 
       onClose();
     } catch (err) {
-      setError("Failed to log in");
+      setError("Failed to log in" + err);
     }
   };
 

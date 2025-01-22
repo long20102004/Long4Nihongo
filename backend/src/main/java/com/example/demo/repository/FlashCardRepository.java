@@ -18,6 +18,8 @@ import java.util.Optional;
 public interface FlashCardRepository extends MongoRepository<FlashCard, String> {
     @Query("{'sectionId' : ?0, 'isDeleted' :  0}")
     public List<FlashCard> findAllByLessonSectionId(String sectionId);
+    @Query("{'isDeleted' :  0}")
+    public List<FlashCard> findAll();
     @Query("{'isDeleted' :  0, '_id' : ?0}")
     @NonNull
     public Optional<FlashCard> findById(String id);

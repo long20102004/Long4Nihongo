@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/context/auth-context";
@@ -21,7 +20,10 @@ import { AuthModal } from "@/components/auth-model";
 import LoginPage from "@/app/login/login";
 import SignUpPage from "@/app/signup/signup";
 
-export default function Header() {
+export default function Header({
+  onTriggerLogin = () => {},
+  setTriggerLogin = () => {},
+}) {
   const { user, logout, login } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -31,7 +33,15 @@ export default function Header() {
     await logout();
     setIsOpen(false);
   };
+  // useEffect(() => {
+  //   setIsLoginModalOpen(onTriggerLogin);
+  // }, [onTriggerLogin]);
 
+  // useEffect(() => {
+  //   if (!isLoginModalOpen) {
+  //     setTriggerLogin(false);
+  //   }
+  // }, [isLoginModalOpen]);
   return (
     <header className="border-b border-slate-200 dark:border-slate-700">
       <div className="container mx-auto px-4 py-4 bg-background dark:bg-background">
@@ -44,20 +54,20 @@ export default function Header() {
               variant="ghost"
               className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
-              <Link href="/">Home</Link>
+              <Link href="/">Trang chủ</Link>
             </Button>
             <Button
               variant="ghost"
               className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
-              <Link href="/courses">Courses</Link>
+              <Link href="/courses">Khóa học</Link>
             </Button>
-            <Button
+            {/* <Button
               variant="ghost"
               className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               <Link href="/careers">Careers</Link>
-            </Button>
+            </Button> */}
 
             <Button
               variant="outline"
@@ -72,7 +82,7 @@ export default function Header() {
               variant="ghost"
               className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
-              <Link href="/about">About Us</Link>
+              <Link href="/about">Về Long4Nihongo</Link>
             </Button>
           </div>
           <div className="flex items-center space-x-4">
@@ -107,31 +117,31 @@ export default function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/profile">
                       <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
+                      <span>Thông tin cá nhân</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/my-course">
                       <BookOpen className="mr-2 h-4 w-4" />
-                      <span>My Courses</span>
+                      <span>Khóa học của tôi</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/checkout">
                       <ShoppingCart className="mr-2 h-4 w-4" />
-                      <span>Checkout</span>
+                      <span>Thanh toán</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/profile/change-password">
                       <Key className="mr-2 h-4 w-4" />
-                      <span>Change Password</span>
+                      <span>Đổi mật khẩu</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <span>Đăng xuất</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -142,14 +152,14 @@ export default function Header() {
                   className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
                   onClick={() => setIsLoginModalOpen(true)}
                 >
-                  Sign In
+                  Đăng nhập
                 </Button>
                 <Button
                   variant="outline"
                   className="text-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
                   onClick={() => setIsSignUpModalOpen(true)}
                 >
-                  Sign Up
+                  Đăng ký
                 </Button>
               </>
             )}

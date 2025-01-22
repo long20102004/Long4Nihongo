@@ -31,14 +31,20 @@ export default function FlashcardsGrid({
     onEdit(editedFlashcard);
     setEditingId(null);
   };
-  const handleAddMultipleFlashcards = () => {
+  const handleAddMultipleFlashcards = async () => {
+    // Make the function async
     const flashcards = multipleFlashcards.split("\n").map((line) => {
       const [word, meaning, example, imgUrl] = line
         .split(",")
         .map((item) => item.trim());
       return { word, meaning, example, imgUrl };
     });
-    flashcards.forEach((flashcard) => onAdd(flashcard));
+
+    for (const flashcard of flashcards) {
+      onAdd(flashcard);
+      await new Promise((resolve) => setTimeout(resolve, 100)); // 100ms delay
+    }
+
     setMultipleFlashcards("");
   };
 
@@ -46,7 +52,7 @@ export default function FlashcardsGrid({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {flashcards.map((flashcard, index) => (
         <Card
-          key={flashcard.id}
+          key={index}
           className="bg-gray-800 text-gray-100 hover:bg-gray-700 transition-colors duration-200"
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -220,7 +226,7 @@ export default function FlashcardsGrid({
             value={multipleFlashcards}
             onChange={(e) => setMultipleFlashcards(e.target.value)}
             className="mb-2 bg-gray-700 text-white border-gray-600"
-            placeholder="Enter multiple flashcards (one per line, format: word,meaning,example)"
+            placeholder="Enter multiple flashcards (one per line, format: word,meaning,example,imageurl)"
             rows={10}
           />
           <Button

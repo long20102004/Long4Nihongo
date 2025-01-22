@@ -28,6 +28,9 @@ export default function UserManagement() {
   };
 
   const handleDeleteUser = (id) => {
+    apiFetch(`admin/delete-user/${id}`, {
+      method: "DELETE",
+    });
     setUsers((prev) => prev.filter((user) => user.id !== id));
   };
 

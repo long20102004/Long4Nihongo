@@ -25,6 +25,9 @@ public class FlashCardService {
     public List<FlashCard> findBySectionId(String sectionId){
         return flashCardRepository.findAllByLessonSectionId(sectionId);
     }
+    public List<FlashCard> findAll(){
+        return flashCardRepository.findAll();
+    }
     public void save(FlashCard flashCard){
         flashCardRepository.save(flashCard);
     }

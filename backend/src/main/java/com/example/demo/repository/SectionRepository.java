@@ -12,7 +12,8 @@ import java.util.Optional;
 public interface SectionRepository extends MongoRepository<Section, String> {
     @Query("{ 'lessonId' : ?0, 'isDeleted' :  0}")
     public List<Section> findSectionByLessonId(int lessonId);
-    @Query("{ 'sectionId' : ?0, 'isDeleted' :  0}")
+
+    @Query("{ '_id' : ?0, 'isDeleted' :  0}")
     public Optional<Section> findById(String sectionId);
 }
 

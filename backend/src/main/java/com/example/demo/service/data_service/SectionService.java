@@ -49,6 +49,7 @@ public class SectionService {
     public Section save(Section section) {
         return sectionRepository.save(section);
     }
+
     public Section findById(String id){
         return sectionRepository.findById(id).get();
     }
