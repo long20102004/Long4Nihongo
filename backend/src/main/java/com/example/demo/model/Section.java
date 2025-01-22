@@ -25,7 +25,9 @@ public class Section {
     private List<FlashCard> flashCards;
     @DBRef
     private List<Question> questions;
+    private String videoUrl;
     private int isDeleted;
+    private int isDemo;
     public Section(SectionDTO sectionDTO) {
         this.name = sectionDTO.getName();
         this.lessonId = sectionDTO.getLessonId();

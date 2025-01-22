@@ -19,22 +19,21 @@ export default function Lesson({ lesson }) {
   const [selectedId, setSelectedId] = useState(null);
   const { user } = useAuth();
   useEffect(() => {
-    if (user) {
-      console.log("alo");
-      apiFetch(`api/lessons/${lesson.id}/sections`)
-        .then((response) => response.json())
-        .then((data) => {
-          setSection(data);
-        });
-    }
-  }, []);
+    // if (user) {
+    apiFetch(`api/lessons/${lesson.id}/sections`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSection(data);
+      });
+    // }
+  }, [user]);
   const handleSectionSelect = (sectionId) => {
     setSelectedSectionId(sectionId);
   };
   return (
     <Collapsible>
       <CollapsibleTrigger className="w-full">
-        <div className="flex items-center justify-between w-full p-4 rounded-lg bg-slate-200 dark:bg-slate-700/50 hover:bg-slate-300 dark:hover:bg-slate-600/80 transition-colors group">
+        <div className="flex items-center justify-between w-full p-4 rounded-lg bg-slate-200 dark:bg-slate-700/50 hover:bg-teal-300 dark:hover:bg-teal-600/80 transition-colors group">
           <div className="flex items-center gap-3">
             <PlayCircle className="w-5 h-5 text-teal-600 dark:text-teal-400 flex-shrink-0" />
             <div className="min-w-0 text-left flex-1">

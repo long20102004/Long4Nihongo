@@ -22,6 +22,7 @@ import Header from "@/components/site-header";
 import Link from "next/link";
 import { use, useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api-fetch";
+import { useAuth } from "@/lib/context/auth-context";
 function StarRating({ rating }) {
   return (
     <div className="flex items-center">
@@ -57,8 +58,9 @@ function RatingBar({ stars, percentage }) {
 
 export default function CoursePage({ params: paramsPromise }) {
   const params = use(paramsPromise);
-
+  const { user } = useAuth();
   const [course, setCourse] = useState([]);
+  const [trigger, setTrigger] = useState(false);
   useEffect(() => {
     apiFetch(`api/course/${params.id}`)
       .then((response) => response.json())
@@ -73,19 +75,18 @@ export default function CoursePage({ params: paramsPromise }) {
 
   return (
     <>
-      <Header></Header>
+      <Header onTriggerLogin={trigger} setTriggerLogin={setTrigger}></Header>
       <div className="max-w-7xl mx-auto p-4">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div className="md:col-span-2">
             <div className="relative h-[400px] mb-6 rounded-lg overflow-hidden">
-              {/* <Image
-                src={null}
-                // src={`https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-TaaB5TjNNHcSCLKTuSZhYYKZq9vKw7.png`}
+              <Image
+                src={course.imageUrl}
                 alt="Course header"
                 layout="fill"
                 objectFit="cover"
                 className="rounded-lg"
-              /> */}
+              />
             </div>
 
             <Tabs defaultValue="overview" className="mb-8">
@@ -123,7 +124,7 @@ export default function CoursePage({ params: paramsPromise }) {
                         {[1, 2].map((review) => (
                           <div key={review} className="flex gap-4">
                             <Avatar>
-                              <AvatarImage src="/placeholder.svg" />
+                              <AvatarImage src="/window.svg" />
                               <AvatarFallback>UN</AvatarFallback>
                             </Avatar>
                             <div>
@@ -172,9 +173,21 @@ export default function CoursePage({ params: paramsPromise }) {
                     11 hours left at this price
                   </p>
                 </div>
-                <Link href={`/checkout?price=${course.price}`}>
-                  <Button className="w-full mb-6">Buy Now</Button>
+                <Link href={`/course/${course.id}`}>
+                  <Button className="bg-slate-500 w-full mb-2">Học thử</Button>
                 </Link>
+                {user ? (
+                  <Link href={`/checkout?price=${course.price}`}>
+                    <Button className="w-full mb-6">Đăng ký</Button>
+                  </Link>
+                ) : (
+                  <Button
+                    className="w-full mb-6"
+                    onClick={() => setTrigger(true)}
+                  >
+                    Đăng ký
+                  </Button>
+                )}
                 <div className="space-y-6">
                   <h3 className="text-lg font-semibold">
                     This Course included
@@ -258,7 +271,7 @@ export default function CoursePage({ params: paramsPromise }) {
                 <div className="flex items-center gap-4 mb-4">
                   <div className="relative w-20 h-20 rounded-lg overflow-hidden">
                     <Image
-                      src="/placeholder.svg?height=80&width=80"
+                      src="/window.svg?height=80&width=80"
                       alt="Course 1"
                       layout="fill"
                       objectFit="cover"
@@ -305,7 +318,7 @@ export default function CoursePage({ params: paramsPromise }) {
                 <div className="flex items-center gap-4 mb-4">
                   <div className="relative w-20 h-20 rounded-lg overflow-hidden">
                     <Image
-                      src="/placeholder.svg?height=80&width=80"
+                      src="/window.svg?height=80&width=80"
                       alt="Course 2"
                       layout="fill"
                       objectFit="cover"
@@ -352,7 +365,7 @@ export default function CoursePage({ params: paramsPromise }) {
                 <div className="flex items-center gap-4 mb-4">
                   <div className="relative w-20 h-20 rounded-lg overflow-hidden">
                     <Image
-                      src="/placeholder.svg?height=80&width=80"
+                      src="/window.svg?height=80&width=80"
                       alt="Course 3"
                       layout="fill"
                       objectFit="cover"

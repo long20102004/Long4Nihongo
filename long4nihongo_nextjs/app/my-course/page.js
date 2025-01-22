@@ -14,16 +14,13 @@ import Image from "next/image";
 import Header from "@/components/site-header";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import { apiFetch } from "@/lib/api-fetch";
 export default function CoursesPage() {
   const [courses, setCourses] = useState([]);
-  const myCourseList =
-    localStorage.getItem("crs") !== "null"
-      ? JSON.parse(localStorage.getItem("crs"))
-      : [];
   useEffect(() => {
-    setCourses(myCourseList);
-    console.log(myCourseList);
+    apiFetch("api/my-courses")
+      .then((response) => response.json())
+      .then((data) => setCourses(data));
   }, []);
   return (
     <div className="bg-background">
@@ -31,14 +28,12 @@ export default function CoursesPage() {
       <div className="mx-auto container space-y-8">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">My Courses</h1>
-            <p className="text-muted-foreground">
-              Continue learning where you left off
-            </p>
+            <h1 className="text-3xl font-bold p-6">Khóa học của tôi</h1>
+            <p className="text-muted-foreground">Học tiếp ngay nào</p>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-sm text-muted-foreground">Overall Progress</p>
+              <p className="text-sm text-muted-foreground">Tổng quá trình</p>
               <p className="text-2xl font-bold">46.7%</p>
             </div>
             <Trophy className="w-8 h-8 text-yellow-500" />
@@ -51,7 +46,7 @@ export default function CoursesPage() {
               <CardHeader className="p-0">
                 <div className="relative h-48">
                   <Image
-                    src={course.image || "/placeholder.svg"}
+                    src={course.imageUrl || "/placeholder.svg"}
                     alt={course.name}
                     fill
                     className="object-cover"
@@ -67,25 +62,25 @@ export default function CoursesPage() {
                   <div className="flex justify-between text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <BookOpen className="w-4 h-4" />
-                      <span>12/20 Lessons</span>
+                      <span>12/20 Bài học</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>20 hours</span>
+                      <span>20 giờ</span>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span>Progress</span>
+                      <span>Quá trình</span>
                       <span>20%</span>
                     </div>
-                    <Progress value="50" />
+                    <Progress value="20" />
                   </div>
                 </div>
               </CardContent>
               <CardFooter className="p-6 pt-0">
                 <Link href={`/course/${course.id}`}>
-                  <Button className="w-full">Continue Learning</Button>
+                  <Button className="w-full">Học tiếp</Button>
                 </Link>
               </CardFooter>
             </Card>

@@ -1,5 +1,0 @@
-INSERT INTO long4nihongo.courses (id, name, author_name, created_at, price, course_img_url, learning_time, number_lessons) VALUES (1, 'N3 Kanji', 'Long Hoang Hai', '2024-01-01', 100, './n5course.jpg', 2, 25);
-INSERT INTO long4nihongo.courses (id, name, author_name, created_at, price, course_img_url, learning_time, number_lessons) VALUES (2, 'N3 Vocabulary', 'Long Hoang Hai', '2024-02-01', 200, './n4course.jpg', 4, 20);
-INSERT INTO long4nihongo.courses (id, name, author_name, created_at, price, course_img_url, learning_time, number_lessons) VALUES (3, 'N3 Grammar', 'Long Hoang Hai', '2024-10-09', 100, './n3course.jpg', 3, 25);
-INSERT INTO long4nihongo.courses (id, name, author_name, created_at, price, course_img_url, learning_time, number_lessons) VALUES (4, 'N4 Kanji & Vocabulary', 'Long Hoang Hai', '2024-10-09', 100, './n3course.jpg', 5, 20);
-INSERT INTO long4nihongo.courses (id, name, author_name, created_at, price, course_img_url, learning_time, number_lessons) VALUES (5, 'N4 Grammar', 'Long Hoang Hai', '2024-10-09', 250, './n4course.jpg', 7, 30);

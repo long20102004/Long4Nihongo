@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import FlashCardGrid from "@/components/grid/FlashCardsGrid";
 import QuestionsGrid from "@/components/grid/QuestionsGrid";
 import WordsGrid from "@/components/grid/WordsGrid";
-import { ArrowLeft, Book, HelpCircle, BookOpen } from "lucide-react";
+import ContentGrid from "@/components/grid/ContentGrid";
+import { ArrowLeft, Book, HelpCircle, BookOpen, File } from "lucide-react";
 import { apiFetch } from "@/lib/api-fetch";
 export default function SectionContent() {
   const params = useParams();
@@ -39,6 +40,9 @@ export default function SectionContent() {
       case "words":
         url = "admin/update-word";
         break;
+      case "content":
+        url = "admin/update-content";
+        break;
     }
     console.log(url + `/${updatedItem.id}` + JSON.stringify(updatedItem));
     apiFetch(url + `/${updatedItem.id}`, {
@@ -61,8 +65,18 @@ export default function SectionContent() {
       case "words":
         url = "admin/add-word";
         break;
+      case "content":
+        url = `files/upload/${id}`;
+        const formData = new FormData();
+        formData.append("title", addedItem.title); // Append the title
+        formData.append("file", addedItem.file); // Append the image/video file
+        apiFetch(url, {
+          method: "POST",
+          body: formData,
+        }).then((data) => console.log(data));
+        return;
     }
-    console.log(addedItem);
+
     apiFetch(url, {
       method: "POST",
       headers: {
@@ -70,6 +84,7 @@ export default function SectionContent() {
       },
       body: JSON.stringify({ ...addedItem, sectionId: id }),
     });
+    console.log(addedItem);
     setContent([...content, addedItem]);
   };
 
@@ -85,6 +100,9 @@ export default function SectionContent() {
         break;
       case "words":
         url = "admin/delete-word";
+        break;
+      case "content":
+        url = "admin/delete-content";
         break;
     }
     apiFetch(url + `/${id}`, {
@@ -102,6 +120,8 @@ export default function SectionContent() {
         return <HelpCircle className="mr-2 h-5 w-5 text-green-400" />;
       case "words":
         return <BookOpen className="mr-2 h-5 w-5 text-yellow-400" />;
+      case "content":
+        return <File className="mr-2 h-5 w-5 text-purple-400" />;
       default:
         return null;
     }
@@ -118,7 +138,7 @@ export default function SectionContent() {
       </Button>
       <h1 className="text-3xl font-bold mb-6 text-gray-100 flex items-center">
         {getIcon()}
-        {type.charAt(0).toUpperCase() + type.slice(1)}
+        {/* {type.charAt(0).toUpperCase() + type.slice(1)} */}
       </h1>
       {type === "flashcards" && (
         <FlashCardGrid
@@ -142,6 +162,15 @@ export default function SectionContent() {
         <WordsGrid
           sectionId={id}
           words={content}
+          onEdit={handleEdit}
+          onAdd={handleAdd}
+          onDelete={handleDelete}
+        />
+      )}
+      {type === "content" && (
+        <ContentGrid
+          sectionId={id}
+          contents={content}
           onEdit={handleEdit}
           onAdd={handleAdd}
           onDelete={handleDelete}

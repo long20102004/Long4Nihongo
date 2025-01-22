@@ -16,7 +16,7 @@ export function FlashCard({ flashcards }) {
   const [direction, setDirection] = useState(0);
 
   const currentCard = flashcards[currentIndex];
-  const learned = flashcards.length - (currentIndex + 1);
+  const learned = flashcards.length - currentIndex - 1;
   const remaining = currentIndex;
 
   const handlePrevious = () => {
@@ -38,7 +38,9 @@ export function FlashCard({ flashcards }) {
       <div className="flex items-center justify-center space-x-4 text-lg font-medium">
         <span className="text-red-500 dark:text-red-400">{learned}</span>
         <span className="text-slate-600 dark:text-slate-400">←</span>
-        <span className="text-slate-900 dark:text-white">{currentIndex}</span>
+        <span className="text-slate-900 dark:text-white">
+          {currentIndex + 1}
+        </span>
         <span className="text-slate-600 dark:text-slate-400">→</span>
         <span className="text-green-600 dark:text-green-400">{remaining}</span>
       </div>

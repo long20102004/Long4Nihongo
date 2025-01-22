@@ -34,7 +34,7 @@ export default function CourseJourney() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        Your Learning Journey
+        Lộ trình của bạn
       </motion.h1>
       <div ref={containerRef} className="relative">
         <CoursePath progress={scrollYProgress} />

@@ -28,7 +28,7 @@ public class LessonService {
 
 
     public void deleteById(int lessonId) {
-        for (Section section : sectionService.findAll()){
+        for (Section section : sectionService.findSectionByLessonId(lessonId)){
             sectionService.deleteById(section.getId());
         }
         lessonRepository.deleteById(lessonId);

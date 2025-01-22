@@ -15,23 +15,29 @@ export default function Home() {
         <div className="container flex min-h-[800px] flex-col items-start justify-center md:flex-row md:items-center md:justify-between">
           {/* Left Column */}
           <div className="flex flex-col space-y-4 md:w-1/2">
-            <h1 className="text-5xl font-bold leading-tight lg:text-6xl">
-              <span className="text-teal-500">Studying</span> Online is now
+            <h1
+              className="text-5xl font-bold lg:text-6xl space-y-3"
+              style={{ lineHeight: "1.2" }} // Adjust this value as needed
+            >
+              <span className="text-teal-500">Học tiếng Nhật</span> dễ dàng
               <br />
-              much easier
+              hơn bao giờ hết!
             </h1>
+
             <p className="text-xl text-muted-foreground">
-              TOTC is an interesting platform that will teach you in more an
-              interactive way
+              Long4Nihongo là nền tảng học tiếng Nhật trực tuyến giúp các bạn
+              bước chân vào chặng đường chinh phục ngôn ngữ này
             </p>
             <div className="flex items-center space-x-4">
               <Button size="lg" className="bg-teal-600 hover:bg-teal-700">
-                Join for free
+                Học thử ngay !
               </Button>
-              <Button variant="outline" size="lg" className="group">
-                <Play className="mr-2 h-4 w-4 group-hover:text-teal-500" />
-                Watch how it works
-              </Button>
+              <Link href="/courses">
+                <Button variant="outline" size="lg" className="group">
+                  <Play className="mr-2 h-4 w-4 group-hover:text-teal-500" />
+                  Xem lộ trình học
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -65,16 +71,16 @@ export default function Home() {
               <div className="flex items-center space-x-4">
                 <div className="h-10 w-10 rounded-full bg-teal-500" />
                 <div>
-                  <div className="text-sm font-medium">
-                    User Experience Class
-                  </div>
+                  <div className="text-sm font-medium">Luyện nói với AI</div>
                   <div className="text-xs text-muted-foreground">
-                    Today at 12.00 PM
+                    Tự tin kaiwa với L4N
                   </div>
                 </div>
-                <Button size="sm" className="bg-pink-500 hover:bg-pink-600">
-                  Join Now
-                </Button>
+                <Link href="/ai-voice-chat">
+                  <Button size="sm" className="bg-pink-500 hover:bg-pink-600">
+                    Thử ngay
+                  </Button>
+                </Link>
               </div>
             </div>
 

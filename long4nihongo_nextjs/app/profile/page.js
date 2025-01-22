@@ -1,3 +1,4 @@
+"use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,7 +7,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Camera, Mail, Phone, MapPin } from "lucide-react";
 import Header from "@/components/site-header";
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api-fetch";
 export default function ProfilePage() {
+  const [user, setUser] = useState();
+  useEffect(() => {
+    console.log("fet");
+    apiFetch("api/user", {
+      method: "POST",
+    })
+      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        setUser(data);
+      });
+  }, []);
   return (
     <div className=" mx-auto space-y-8 bg-background">
       <Header />
@@ -18,7 +33,7 @@ export default function ProfilePage() {
             <div className="relative z-10 flex flex-col items-center mt-8">
               <Avatar className="w-24 h-24 border-4 border-white shadow-lg">
                 <AvatarImage src="/placeholder.svg?text=JD" />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback>Long</AvatarFallback>
               </Avatar>
               <Button
                 size="sm"
@@ -32,19 +47,19 @@ export default function ProfilePage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="text-center">
-              <h1 className="text-2xl font-bold">John Doe</h1>
-              <p className="text-muted-foreground">Full Stack Developer</p>
+              <h1 className="text-2xl font-bold">{user?.name || "name"}</h1>
+              <p className="text-muted-foreground">Backend Developer</p>
             </div>
             <div className="flex flex-wrap gap-2 justify-center">
-              <Badge variant="secondary">React</Badge>
+              <Badge variant="secondary">Java Spring Boot</Badge>
               <Badge variant="secondary">Next.js</Badge>
-              <Badge variant="secondary">TypeScript</Badge>
-              <Badge variant="secondary">Node.js</Badge>
+              <Badge variant="secondary">Java</Badge>
+              <Badge variant="secondary">Html,css,js</Badge>
             </div>
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <span>john.doe@example.com</span>
+                <span>{user?.username || "username"}</span>
               </div>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Phone className="w-4 h-4" />
@@ -68,18 +83,18 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" defaultValue="John" />
+                  <Input id="firstName" defaultValue={user?.name} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" defaultValue="Doe" />
+                  <Input id="lastName" defaultValue="" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
-                    defaultValue="john.doe@example.com"
+                    defaultValue={user?.username}
                   />
                 </div>
                 <div className="space-y-2">
