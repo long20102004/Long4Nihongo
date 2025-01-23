@@ -1,5 +1,5 @@
 export async function apiFetch(url, options = {}) {
-  const baseUrl = "http://20.239.232.148:8080";
+  const baseUrl = "https://long4nihongo.online";
   const finalUrl = url.startsWith("http") ? url : `${baseUrl}/${url}`;
   const { method = "GET", ...restOptions } = options;
   const response = await fetch(finalUrl, {
