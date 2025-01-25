@@ -1,5 +1,5 @@
 export async function apiFetch(url, options = {}) {
-  const baseUrl = "http://localhost:8080";
+  const baseUrl = "https://localhost:8443";
   const finalUrl = url.startsWith("http") ? url : `${baseUrl}/${url}`;
   const { method = "GET", ...restOptions } = options;
   const response = await fetch(finalUrl, {

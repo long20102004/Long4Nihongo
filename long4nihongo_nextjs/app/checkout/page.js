@@ -3,10 +3,72 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import SiteHeader from "@/components/site-header";
-
+import { useEffect, useState } from "react";
+import { useChoosedCourse } from "@/lib/context/course-checkout-content";
+import { useAuth } from "@/lib/context/auth-context";
+import { apiFetch } from "@/lib/api-fetch";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 export default function CheckoutPage() {
-  const price = 100000;
-  const paymentUrl = `https://api.vietqr.io/image/970422-0981952931-18LXR4E.jpg?accountName=HOANG%20HAI%20LONG&amount=${price}`;
+  const [paymentUrl, setPaymentUrl] = useState("/window.svg");
+  const { choosedCourse, setChoosedCourse } = useChoosedCourse();
+  const { user } = useAuth();
+  const router = useRouter();
+  const [price, setPrice] = useState(0);
+
+  const [error, setError] = useState(null);
+  const [courses, setCourseData] = useState([]);
+  useEffect(() => {
+    apiFetch("api/courses")
+      .then((response) => response.json())
+      .then((data) => {
+        setCourseData(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    const storedCourses = localStorage.getItem("choosedCourses");
+    if (storedCourses) {
+      setChoosedCourse(JSON.parse(storedCourses));
+    }
+  }, [setChoosedCourse]);
+
+  useEffect(() => {
+    if (!user || !choosedCourse) {
+      setPaymentUrl("/window.svg");
+      return;
+    }
+    let description = user.id + " dang ky khoa ";
+    if (choosedCourse.length > 0) {
+      let totalPrice = 0;
+      choosedCourse.forEach((course) => {
+        description += course.id + " ";
+        totalPrice += course.price;
+      });
+      setPrice(totalPrice);
+      localStorage.setItem("choosedCourses", JSON.stringify(choosedCourse));
+    }
+    setPaymentUrl(
+      `https://img.vietqr.io/image/970422-0981952931-qr_only.png?amount=${price}&addInfo=${description}&accountName=HOANG HAI LONG`
+    );
+  }, [choosedCourse, user, price]);
+  const handleCheck = () => {
+    if (choosedCourse) {
+      apiFetch(`api/check-course/${choosedCourse[0].id}`, {
+        method: "POST",
+      })
+        .then((response) => {
+          if (response.ok) {
+            router.push("/my-courses");
+          }
+        })
+        .catch((error) => {
+          setError(
+            "Hệ thống đang xác nhận. Kiểm tra lại giao dịch và ấn xác nhận lại nha"
+          );
+        });
+    }
+  };
 
   return (
     <>
@@ -18,55 +80,67 @@ export default function CheckoutPage() {
             <Card className="p-6">
               <h2 className="text-lg font-semibold mb-6">QR Code Payment</h2>
               <div className="text-center">
-                <p className="mb-4">
-                  Scan the QR code below to complete your payment:
-                </p>
+                <p className="mb-4">Quét mã dưới đây để thanh toán:</p>
                 <Image
-                  src={paymentUrl}
-                  alt="QR Code for Payment"
+                  src={paymentUrl || "/placeholder.svg"}
+                  alt="Thanh toán qua QR code"
                   width={200}
                   height={200}
                   className="mx-auto"
                 />
                 <p className="text-muted-foreground text-sm mt-4">
-                  Ensure to complete the payment within 10 minutes.
+                  Mã có hiệu lực trong 10 phút
                 </p>
-                <Button className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button
+                  onClick={handleCheck}
+                  className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
+                >
                   Confirm Payment
                 </Button>
+                {error && (
+                  <div className="text-red-500 mt-4 text-center">{error}</div>
+                )}
               </div>
             </Card>
 
             {/* Offers Section */}
             <div className="mt-8">
               <h2 className="text-xl font-semibold mb-6 flex justify-between items-center">
-                Top Education offers and deals are listed here
+                Tham khảo thêm các khóa học liên quan:
                 <Button variant="link" className="text-primary">
                   See all
                 </Button>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[
-                  { discount: "50%", title: "Lorem ipsum dolor" },
-                  { discount: "10%", title: "Lorem ipsum dolor" },
-                  { discount: "50%", title: "Lorem ipsum dolor" },
-                ].map((offer, index) => (
-                  <Card key={index} className="relative overflow-hidden">
-                    <Image
-                      src="/placeholder.svg?height=200&width=300"
-                      alt={offer.title}
-                      width={300}
-                      height={200}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent p-4 flex flex-col justify-end">
-                      <div className="text-2xl font-bold text-white mb-1">
-                        {offer.discount}
-                      </div>
-                      <p className="text-sm text-gray-200">{offer.title}</p>
-                    </div>
-                  </Card>
-                ))}
+                {courses
+                  .filter(
+                    (course) =>
+                      !choosedCourse.some((chosen) => chosen.id === course.id)
+                  )
+                  .map((course, index) => (
+                    <Link href={`course-introduce/${course.id}`}>
+                      <Card key={index} className="relative overflow-hidden">
+                        <Image
+                          src={
+                            course.imageUrl ||
+                            "/placeholder.svg?height=200&width=300" ||
+                            "/placeholder.svg" ||
+                            "/placeholder.svg"
+                          }
+                          alt={course.name}
+                          width={300}
+                          height={200}
+                          className="w-full h-48 object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent p-4 flex flex-col justify-end">
+                          <div className="text-2xl font-bold text-white mb-1">
+                            50%
+                          </div>
+                          <p className="text-sm text-gray-200">{course.name}</p>
+                        </div>
+                      </Card>
+                    </Link>
+                  ))}
               </div>
             </div>
           </div>
@@ -74,45 +148,49 @@ export default function CheckoutPage() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <Card className="p-6">
-              <h2 className="text-lg font-semibold mb-6">Summary</h2>
+              <h2 className="text-lg font-semibold mb-6">Khóa học</h2>
               <div className="space-y-4">
-                {[1, 2].map((item) => (
-                  <div key={item} className="flex gap-4">
+                {choosedCourse.map((item) => (
+                  <div key={item.id} className="flex gap-4">
+                    {" "}
+                    {/* Added id to key */}
                     <Image
-                      src="/placeholder.svg?height=80&width=120"
-                      alt={`Course ${item}`}
+                      src={
+                        item.imageUrl || "/placeholder.svg?height=80&width=120"
+                      }
+                      alt={`Course ${item.name}`}
                       width={120}
                       height={80}
                       className="rounded-lg"
                     />
                     <div>
-                      <h3 className="font-medium">
-                        Lorem ipsum dolor sit amet
-                      </h3>
+                      <h3 className="font-medium">{item.name}</h3>
                       <p className="text-muted-foreground text-sm">
-                        Lorem ipsum dolor...
+                        {item.description}
                       </p>
-                      <p className="text-primary font-semibold mt-1">$24.99</p>
+                      <p className="text-primary font-semibold mt-1">
+                        {item.price}
+                      </p>
                     </div>
                   </div>
                 ))}
 
                 <div className="border-t border-border pt-4 mt-4">
                   <div className="flex justify-between text-muted-foreground mb-2">
-                    <span>Subtotal</span>
-                    <span>$91.96</span>
+                    <span>Giá gốc</span>
+                    <span>{price}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground mb-2">
-                    <span>Coupon Discount</span>
+                    <span>Giảm giá</span>
                     <span>0%</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground mb-4">
-                    <span>TAX</span>
+                    <span>Thuế</span>
                     <span>$0</span>
                   </div>
                   <div className="flex justify-between text-lg font-semibold">
-                    <span>Total</span>
-                    <span>$91.96</span>
+                    <span>Giá cuối</span>
+                    <span>{price}</span>
                   </div>
                 </div>
               </div>

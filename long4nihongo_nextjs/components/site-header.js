@@ -23,28 +23,25 @@ import SignUpPage from "@/app/signup/signup";
 export default function Header({
   onTriggerLogin = () => {},
   setTriggerLogin = () => {},
+  callLoginFormFromOtherComponents = false,
 }) {
   const { user, logout, login } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
   const handleLogout = async () => {
     await logout();
     setIsOpen(false);
   };
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-  // useEffect(() => {
-  //   setIsLoginModalOpen(onTriggerLogin);
-  // }, [onTriggerLogin]);
+    if (callLoginFormFromOtherComponents) setIsLoginModalOpen(onTriggerLogin);
+  }, [onTriggerLogin]);
 
-  // useEffect(() => {
-  //   if (!isLoginModalOpen) {
-  //     setTriggerLogin(false);
-  //   }
-  // }, [isLoginModalOpen]);
+  useEffect(() => {
+    if (!isLoginModalOpen) {
+      setTriggerLogin(false);
+    }
+  }, [isLoginModalOpen]);
   return (
     <header className="border-b border-slate-200 dark:border-slate-700">
       <div className="container mx-auto px-4 py-4 bg-background dark:bg-background">
@@ -89,7 +86,7 @@ export default function Header({
             </Button>
           </div>
           <div className="flex items-center space-x-4">
-            {isClient && localStorage.getItem("active") == 1 ? (
+            {localStorage.getItem("active") == 1 ? (
               <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -124,15 +121,15 @@ export default function Header({
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/my-course">
+                    <Link href="/my-courses">
                       <BookOpen className="mr-2 h-4 w-4" />
                       <span>Khóa học của tôi</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/checkout">
+                    <Link href="/my-receipts">
                       <ShoppingCart className="mr-2 h-4 w-4" />
-                      <span>Thanh toán</span>
+                      <span>Lịch sử thanh toán</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

@@ -23,9 +23,17 @@ export default function CoursePage({ params: paramsPromise }) {
   const [questions, setQuestions] = useState([]);
   const [haveCourse, setHaveCourse] = useState(false);
   const [video, setVideo] = useState("");
+
+  const isContentEmpty = () => {
+    return (
+      (contentType === "flashcard" && flashCards.length === 0) ||
+      (contentType === "quiz" && questions.length === 0) ||
+      (contentType === "video" && video === "test")
+    );
+  };
+
   useEffect(() => {
-    setVideo(`/api/video/${encodeURIComponent(dataList.videoUrl)}`);
-    // setVideo(dataList.videoUrl);
+    setVideo(dataList.videoUrl === "test" ? "test" : dataList.videoUrl);
     const newFlashCards = [];
     const newWords = [];
     const newQuestions = [];
@@ -97,22 +105,29 @@ export default function CoursePage({ params: paramsPromise }) {
                 />
 
                 <div className="aspect-video mb-8">
-                  {contentType === "video" && (
+                  {isContentEmpty() ? (
                     <div className="w-full h-full bg-white dark:bg-slate-700 rounded-lg flex items-center justify-center">
                       <p className="text-slate-600 dark:text-slate-400">
-                        <video controls key={video}>
-                          <source type="video/mp4" src={video} />
-                        </video>
+                        Please choose a section to learn. This content is not
+                        available.
                       </p>
                     </div>
-                  )}
+                  ) : (
+                    <>
+                      {contentType === "video" && (
+                        <div className="w-full h-full bg-white dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                          <video controls key={video} className="w-full h-full">
+                            <source type="video/mp4" src={video} />
+                          </video>
+                        </div>
+                      )}
 
-                  {contentType === "flashcard" && flashCards.length > 0 && (
-                    <FlashCard flashcards={flashCards} />
-                  )}
+                      {contentType === "flashcard" && (
+                        <FlashCard flashcards={flashCards} />
+                      )}
 
-                  {contentType === "quiz" && questions.length > 0 && (
-                    <Quiz questions={questions} />
+                      {contentType === "quiz" && <Quiz questions={questions} />}
+                    </>
                   )}
                 </div>
               </div>

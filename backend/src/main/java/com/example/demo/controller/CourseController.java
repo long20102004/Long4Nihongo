@@ -126,6 +126,8 @@ public class CourseController {
     public ResponseEntity<Boolean> checkUserCourse(@PathVariable int courseId, HttpSession session) {
         System.out.println("check has course");
         boolean userHasCourse = userService.checkIfUserHasCourse(session, courseId);
-        return ResponseEntity.ok(userHasCourse);
+        if (!userHasCourse) return ResponseEntity.badRequest().body(false);
+        return ResponseEntity.ok(true);
     }
+
 }

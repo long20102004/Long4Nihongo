@@ -12,7 +12,7 @@ export default function AboutPage() {
           <div className="flex flex-col md:flex-row">
             <div className="md:w-1/2 relative h-64 md:h-auto">
               <Image
-                src="/placeholder.svg?height=600&width=400"
+                src="https://cdn.long4nihongo.online/mypic.png"
                 alt="Profile Picture"
                 layout="fill"
                 objectFit="cover"
@@ -22,16 +22,17 @@ export default function AboutPage() {
             <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-between">
               <div>
                 <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                  Your Name
+                  Hoàng Hải Long
                 </h1>
                 <p className="text-xl text-gray-600 mb-6">
-                  A passionate developer with a love for creating beautiful and
-                  functional web experiences. Always learning, always growing.
+                  A passionate backend developer with a love for creating
+                  sustainable and scalable backend. Always learning, always
+                  growing.
                 </p>
               </div>
               <div className="flex flex-col gap-4">
                 <SocialButton
-                  href="https://www.facebook.com/reqphna"
+                  href="https://www.facebook.com/1000137975412091I"
                   icon={<FacebookIcon size={24} />}
                   label="Facebook"
                   color="bg-blue-600"

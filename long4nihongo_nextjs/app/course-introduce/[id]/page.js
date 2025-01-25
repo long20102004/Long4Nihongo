@@ -23,6 +23,8 @@ import Link from "next/link";
 import { use, useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api-fetch";
 import { useAuth } from "@/lib/context/auth-context";
+import { useRouter } from "next/navigation";
+import { useChoosedCourse } from "@/lib/context/course-checkout-content";
 function StarRating({ rating }) {
   return (
     <div className="flex items-center">
@@ -57,17 +59,40 @@ function RatingBar({ stars, percentage }) {
 }
 
 export default function CoursePage({ params: paramsPromise }) {
-  const params = use(paramsPromise);
+  const router = useRouter();
   const { user } = useAuth();
   const [course, setCourse] = useState([]);
   const [trigger, setTrigger] = useState(false);
+  const { setChoosedCourse } = useChoosedCourse();
+  const [hadCourse, setHadCourse] = useState(false);
+  const handleCheckout = () => {
+    setChoosedCourse([course]);
+    router.push("/checkout");
+  };
+  const [courses, setCourseData] = useState([]);
+  useEffect(() => {
+    apiFetch("api/courses")
+      .then((response) => response.json())
+      .then((data) => {
+        setCourseData(data);
+      });
+  }, []);
+  const params = use(paramsPromise);
   useEffect(() => {
     apiFetch(`api/course/${params.id}`)
       .then((response) => response.json())
       .then((data) => {
         setCourse(data);
       });
-  }, [params.id]);
+
+    apiFetch(`api/check-course/${params.id}`, { method: "POST" }).then(
+      (response) => {
+        if (response.ok) {
+          setHadCourse(true);
+        }
+      }
+    );
+  }, [params.id, user]);
   const formatPrice = (price) => {
     if (price === undefined) return 0;
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -75,13 +100,17 @@ export default function CoursePage({ params: paramsPromise }) {
 
   return (
     <>
-      <Header onTriggerLogin={trigger} setTriggerLogin={setTrigger}></Header>
+      <Header
+        onTriggerLogin={trigger}
+        setTriggerLogin={setTrigger}
+        callLoginFormFromOtherComponents={true}
+      ></Header>
       <div className="max-w-7xl mx-auto p-4">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div className="md:col-span-2">
             <div className="relative h-[400px] mb-6 rounded-lg overflow-hidden">
               <Image
-                src={course.imageUrl}
+                src={course.imageUrl || "/window.svg"}
                 alt="Course header"
                 layout="fill"
                 objectFit="cover"
@@ -91,10 +120,10 @@ export default function CoursePage({ params: paramsPromise }) {
 
             <Tabs defaultValue="overview" className="mb-8">
               <TabsList>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
-                <TabsTrigger value="instructor">Instructor</TabsTrigger>
-                <TabsTrigger value="reviews">Reviews</TabsTrigger>
+                <TabsTrigger value="overview">Tổng quan</TabsTrigger>
+                <TabsTrigger value="curriculum">Các bài học</TabsTrigger>
+                <TabsTrigger value="instructor">Giảng viên</TabsTrigger>
+                <TabsTrigger value="reviews">Đánh giá</TabsTrigger>
               </TabsList>
               <TabsContent value="overview">
                 <Card>
@@ -128,12 +157,11 @@ export default function CoursePage({ params: paramsPromise }) {
                               <AvatarFallback>UN</AvatarFallback>
                             </Avatar>
                             <div>
-                              <div className="font-semibold mb-1">Lina</div>
+                              <div className="font-semibold mb-1">Bot</div>
                               <StarRating rating={4} />
                               <p className="text-sm text-muted-foreground mt-2">
-                                Class, launched less than a year ago by
-                                Blackboard co-founder Michael Chasen, integrates
-                                exclusively...
+                                Khóa học thật sự rất tuyệt vời với những người
+                                chuẩn bị bắt đầu học tiếng Nhật
                               </p>
                               <div className="text-sm text-muted-foreground mt-1">
                                 1 Month ago
@@ -170,44 +198,54 @@ export default function CoursePage({ params: paramsPromise }) {
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    11 hours left at this price
+                    Còn 11 giờ nữa với mức giá này.
                   </p>
                 </div>
-                <Link href={`/course/${course.id}`}>
-                  <Button className="bg-slate-500 w-full mb-2">Học thử</Button>
-                </Link>
-                {user ? (
-                  <Link href={`/checkout?price=${course.price}`}>
-                    <Button className="w-full mb-6">Đăng ký</Button>
-                  </Link>
+
+                {!hadCourse ? (
+                  <>
+                    <Link href={`/course/${course.id}`}>
+                      <Button className=" w-full mb-2">Học thử</Button>
+                    </Link>
+                    {user ? (
+                      <Button className="w-full mb-6" onClick={handleCheckout}>
+                        Đăng ký
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-full mb-6"
+                        onClick={() => setTrigger(true)}
+                      >
+                        Đăng ký
+                      </Button>
+                    )}
+                  </>
                 ) : (
-                  <Button
-                    className="w-full mb-6"
-                    onClick={() => setTrigger(true)}
-                  >
-                    Đăng ký
-                  </Button>
+                  <Link href={`/course/${course.id}`}>
+                    <Button className="w-full mb-6">Vào học</Button>
+                  </Link>
                 )}
+
                 <div className="space-y-6">
                   <h3 className="text-lg font-semibold">
-                    This Course included
+                    Khóa học này bao gồm:
                   </h3>
                   <div className="space-y-4">
                     <div className="flex gap-2">
                       <ShieldCheck className="h-5 w-5 text-teal-500" />
-                      <span>Money Back Guarantee</span>
+                      <span>Trao đổi trực tiếp với admin</span>
                     </div>
                     <div className="flex gap-2">
                       <DevicePhoneIcon className="h-5 w-5 text-teal-500" />
-                      <span>Access on all devices</span>
+                      <span>Truy cập trên mọi thiết bị</span>
                     </div>
                     <div className="flex gap-2">
                       <Award className="h-5 w-5 text-teal-500" />
-                      <span>Certificate of completion</span>
+                      <span>Nắm vững 2 bảng chữ cái </span>
                     </div>
                     <div className="flex gap-2">
                       <Clock className="h-5 w-5 text-teal-500" />
-                      <span>12 Modules</span>
+                      <span>5 Phần</span>
                     </div>
                   </div>
                 </div>
@@ -217,11 +255,10 @@ export default function CoursePage({ params: paramsPromise }) {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">
-                  Training 5 or more people?
+                  Đăng ký nhiều người:
                 </h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Class, launched less than a year ago by Blackboard co-founder
-                  Michael Chasen, integrates exclusively...
+                  Liên hệ admin để được nhận mức giá ưu đãi hơn
                 </p>
               </CardContent>
             </Card>
@@ -229,7 +266,7 @@ export default function CoursePage({ params: paramsPromise }) {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">
-                  Share this course
+                  Chia sẻ khóa học qua:
                 </h3>
                 <div className="flex gap-2">
                   <Button variant="outline" size="icon">
@@ -258,148 +295,62 @@ export default function CoursePage({ params: paramsPromise }) {
 
         {/* New Combo Deals Section */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">Special Course Bundles</h2>
+          <h2 className="text-2xl font-bold mb-6">Tham khảo các khóa học:</h2>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="relative overflow-hidden">
-              <div className="absolute top-4 right-4">
-                <Badge variant="destructive" className="font-semibold">
-                  <BadgePercent className="w-4 h-4 mr-1" />
-                  Save 25%
-                </Badge>
-              </div>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="relative w-20 h-20 rounded-lg overflow-hidden">
-                    <Image
-                      src="/window.svg?height=80&width=80"
-                      alt="Course 1"
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold mb-1">
-                      Business Strategy + Team Management
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <StarRating rating={4} />
-                      <span className="text-sm text-muted-foreground">
-                        (4.5)
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">
-                      Individual Price
-                    </span>
-                    <span className="line-through text-muted-foreground">
-                      $199.98
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between font-semibold">
-                    <span>Bundle Price</span>
-                    <span className="text-xl">$149.99</span>
-                  </div>
-                </div>
-                <Button className="w-full">Get Bundle Deal</Button>
-              </CardContent>
-            </Card>
+            {courses
+              .filter((chosenCourse) => chosenCourse.id !== course.id)
 
-            <Card className="relative overflow-hidden">
-              <div className="absolute top-4 right-4">
-                <Badge variant="destructive" className="font-semibold">
-                  <BadgePercent className="w-4 h-4 mr-1" />
-                  Save 30%
-                </Badge>
-              </div>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="relative w-20 h-20 rounded-lg overflow-hidden">
-                    <Image
-                      src="/window.svg?height=80&width=80"
-                      alt="Course 2"
-                      layout="fill"
-                      objectFit="cover"
-                    />
+              .map((course, index) => (
+                <Card key={index} className="relative overflow-hidden">
+                  <div className="absolute top-4 right-4">
+                    <Badge variant="destructive" className="font-semibold">
+                      <BadgePercent className="w-4 h-4 mr-1" />
+                      Tiết kiệm 50%
+                    </Badge>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold mb-1">
-                      Project Management + Leadership Skills
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <StarRating rating={5} />
-                      <span className="text-sm text-muted-foreground">
-                        (4.8)
-                      </span>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="relative w-20 h-20 rounded-lg overflow-hidden">
+                        <Image
+                          src={
+                            course.imageUrl || "/window.svg?height=80&width=80"
+                          }
+                          alt={course.name}
+                          layout="fill"
+                          objectFit="cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold mb-1">{course.name}</h3>
+                        <div className="flex items-center gap-2">
+                          <StarRating rating={4} />
+                          <span className="text-sm text-muted-foreground">
+                            ({course.rating})
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">
-                      Individual Price
-                    </span>
-                    <span className="line-through text-muted-foreground">
-                      $249.98
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between font-semibold">
-                    <span>Bundle Price</span>
-                    <span className="text-xl">$174.99</span>
-                  </div>
-                </div>
-                <Button className="w-full">Get Bundle Deal</Button>
-              </CardContent>
-            </Card>
-
-            <Card className="relative overflow-hidden">
-              <div className="absolute top-4 right-4">
-                <Badge variant="destructive" className="font-semibold">
-                  <BadgePercent className="w-4 h-4 mr-1" />
-                  Save 35%
-                </Badge>
-              </div>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="relative w-20 h-20 rounded-lg overflow-hidden">
-                    <Image
-                      src="/window.svg?height=80&width=80"
-                      alt="Course 3"
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold mb-1">
-                      Complete Management Bundle
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <StarRating rating={5} />
-                      <span className="text-sm text-muted-foreground">
-                        (4.9)
-                      </span>
+                    <div className="space-y-4 mb-6">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Giá gốc:
+                        </span>
+                        <span className="line-through text-muted-foreground">
+                          {course.price * 2}đ
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between font-semibold">
+                        <span>Mua combo</span>
+                        <span className="text-xl">${course.price}</span>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">
-                      Individual Price
-                    </span>
-                    <span className="line-through text-muted-foreground">
-                      $299.97
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between font-semibold">
-                    <span>Bundle Price</span>
-                    <span className="text-xl">$194.99</span>
-                  </div>
-                </div>
-                <Button className="w-full">Get Bundle Deal</Button>
-              </CardContent>
-            </Card>
+                    <Link href={`/course-introduce/${course.id}`}>
+                      <Button className="w-full">Xem ngay</Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </div>
       </div>
