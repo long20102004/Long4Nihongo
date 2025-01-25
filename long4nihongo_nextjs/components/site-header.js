@@ -25,6 +25,8 @@ export default function Header({
   setTriggerLogin = () => {},
   callLoginFormFromOtherComponents = false,
 }) {
+  const [isClient, setIsClient] = useState(false);
+
   const { user, logout, login } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -36,7 +38,9 @@ export default function Header({
   useEffect(() => {
     if (callLoginFormFromOtherComponents) setIsLoginModalOpen(onTriggerLogin);
   }, [onTriggerLogin]);
-
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   useEffect(() => {
     if (!isLoginModalOpen) {
       setTriggerLogin(false);
@@ -86,7 +90,7 @@ export default function Header({
             </Button>
           </div>
           <div className="flex items-center space-x-4">
-            {localStorage.getItem("active") == 1 ? (
+            {isClient && localStorage.getItem("active") == 1 ? (
               <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button

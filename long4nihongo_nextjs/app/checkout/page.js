@@ -26,12 +26,12 @@ export default function CheckoutPage() {
       });
   }, []);
 
-  // useEffect(() => {
-  //   const storedCourses = localStorage.getItem("choosedCourses");
-  //   if (storedCourses) {
-  //     setChoosedCourse(JSON.parse(storedCourses));
-  //   }
-  // }, [setChoosedCourse]);
+  useEffect(() => {
+    const storedCourses = localStorage.getItem("choosedCourses");
+    if (storedCourses) {
+      setChoosedCourse(JSON.parse(storedCourses));
+    }
+  }, [setChoosedCourse]);
 
   useEffect(() => {
     if (!user || !choosedCourse) {
@@ -46,7 +46,7 @@ export default function CheckoutPage() {
         totalPrice += course.price;
       });
       setPrice(totalPrice);
-      // localStorage.setItem("choosedCourses", JSON.stringify(choosedCourse));
+      localStorage.setItem("choosedCourses", JSON.stringify(choosedCourse));
     }
     setPaymentUrl(
       `https://img.vietqr.io/image/970422-0981952931-qr_only.png?amount=${price}&addInfo=${description}&accountName=HOANG HAI LONG`
