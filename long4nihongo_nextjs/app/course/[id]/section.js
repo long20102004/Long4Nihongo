@@ -12,7 +12,7 @@ export default function Section({ onSelect, isSelected, section }) {
     setIsLoading(true);
     onSelect();
     setData(section);
-    console.log(section);
+    // console.log(section);
   };
 
   return (

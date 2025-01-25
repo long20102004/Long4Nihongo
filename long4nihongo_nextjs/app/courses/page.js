@@ -7,6 +7,7 @@ import { CoursePath } from "@/components/course-path";
 import SubtleParticleBackground from "@/components/ui/snow-effect";
 import SiteHeader from "@/components/site-header";
 import { apiFetch } from "@/lib/api-fetch";
+import { useChoosedCourse } from "@/lib/context/course-checkout-content";
 
 export default function CourseJourney() {
   const containerRef = useRef(null);
