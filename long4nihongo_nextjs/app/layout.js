@@ -20,18 +20,21 @@ import { usePathname } from "next/navigation";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
-  let pageTitle = "Default Title"; // default title
+  let pageTitle = "LongNihongo - Your Path to Japanese Mastery"; // default title
 
   // Dynamically change title based on the pathname
-  if (pathname === "/") {
-    pageTitle = "LongNihongo - Your Path to Japanese Mastery";
+  if (pathname === "/my-courses") {
+    pageTitle = "My Courses";
   } else if (pathname === "/about") {
     pageTitle = "About Me";
+  } else if (pathname === "/courses") {
+    pageTitle = "All Courses";
   } else if (pathname.startsWith("/course")) {
     pageTitle = "Course";
-  } else if (pathname === "/course") {
-    pageTitle = "Courses";
+  } else if (pathname === "/my-receipts") {
+    pageTitle = "My Receipts";
   }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
