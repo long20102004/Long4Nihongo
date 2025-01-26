@@ -7,8 +7,14 @@ import { CourseProvider } from "@/lib/context/course-provider";
 const inter = Inter({ subsets: ["latin"] });
 import { CourseCheckOutProvider } from "@/lib/context/course-checkout-content";
 export const metadata = {
-  title: "TOTC - Course Platform",
-  description: "Learn and grow with our wide range of courses",
+  Title: "Longnihongo - Your Path to Japanese Mastery",
+  Description:
+    "Dive into Japanese language and culture with Longnihongo. Start learning today!",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png", // Optional shortcut icon
+    apple: "/icon.png", // For Apple devices
+  },
 };
 
 export default function RootLayout({ children }) {

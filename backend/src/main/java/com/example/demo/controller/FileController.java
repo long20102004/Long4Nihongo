@@ -23,26 +23,17 @@ import java.util.Objects;
 @RequestMapping("/files")
 @AllArgsConstructor
 public class FileController {
-    public static final String imageBucketUrl = "https://cdn.long4nihongo.online/";
-    public static final String videoBucketUrl = "https://cdn.course-content.video.long4nihongo.online/";
+    public static final String imageBucketUrl = "https://cdn.longnihongo.com/";
     private final CloudflareR2Service cloudflareR2Service;
     private SectionService sectionService;
 
     @PostMapping("/upload/{sectionId}")
     public void uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String sectionId) throws IOException {
-        String bucketName = "";
+        String bucketName = "longnihongo-data";
         String key = file.getOriginalFilename();
         File tempFile = File.createTempFile("upload-", file.getOriginalFilename());
         file.transferTo(tempFile);
-        String url = "";
-        if (Objects.equals(file.getContentType(), "video/mp4")) {
-            url = videoBucketUrl + key;
-            bucketName = "long4nihongo-video";
-        }
-        else {
-            url = imageBucketUrl + key;
-            bucketName = "long4nihongo-image";
-        }
+        String url = imageBucketUrl + key;
         cloudflareR2Service.uploadFile(bucketName, key, tempFile.getAbsolutePath());
         Section section = sectionService.findById(sectionId);
         section.setVideoUrl(url);
@@ -54,6 +45,7 @@ public class FileController {
         String bucketName = "your-bucket-name";
         return cloudflareR2Service.downloadFile(bucketName, key);
     }
+
     @GetMapping("/buckets")
     public List<String> listBuckets() {
         return cloudflareR2Service.listBuckets();

@@ -12,7 +12,7 @@ export default function AboutPage() {
           <div className="flex flex-col md:flex-row">
             <div className="md:w-1/2 relative h-64 md:h-auto">
               <Image
-                src="https://cdn.long4nihongo.online/mypic.png"
+                src="https://cdn.longnihongo.com/mypic.png"
                 alt="Profile Picture"
                 layout="fill"
                 objectFit="cover"

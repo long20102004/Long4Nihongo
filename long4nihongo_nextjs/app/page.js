@@ -29,9 +29,11 @@ export default function Home() {
               bước chân vào chặng đường chinh phục ngôn ngữ này
             </p>
             <div className="flex items-center space-x-4">
-              <Button size="lg" className="bg-teal-600 hover:bg-teal-700">
-                Học thử ngay !
-              </Button>
+              <Link href={"/course/12"}>
+                <Button size="lg" className="bg-teal-600 hover:bg-teal-700">
+                  Học thử ngay !
+                </Button>
+              </Link>
               <Link href="/courses">
                 <Button variant="outline" size="lg" className="group">
                   <Play className="mr-2 h-4 w-4 group-hover:text-teal-500" />
@@ -47,9 +49,9 @@ export default function Home() {
               <div className="flex items-center space-x-4">
                 <Calendar className="h-8 w-8 text-teal-500" />
                 <div>
-                  <div className="text-sm font-medium">250k</div>
+                  <div className="text-sm font-medium">24/7</div>
                   <div className="text-xs text-muted-foreground">
-                    Assisted Student
+                    Anytime Support
                   </div>
                 </div>
               </div>
@@ -59,9 +61,9 @@ export default function Home() {
               <div className="flex items-center space-x-4">
                 <Mail className="h-8 w-8 text-teal-500" />
                 <div>
-                  <div className="text-sm font-medium">Congratulations</div>
+                  <div className="text-sm font-medium">Admin Email</div>
                   <div className="text-xs text-muted-foreground">
-                    Your admission completed
+                    hoanghailonguyno@gmail.com
                   </div>
                 </div>
               </div>
@@ -107,11 +109,10 @@ export default function Home() {
       {/* Success Section */}
       <section className="py-24">
         <div className="container text-center">
-          <h2 className="text-3xl font-bold mb-4">Our Success</h2>
+          <h2 className="text-3xl font-bold mb-4">Mục tiêu của mình</h2>
           <p className="max-w-2xl mx-auto text-muted-foreground">
-            Ornare id fames interdum porttitor nulla turpis etiam. Diam vitae
-            sollicitudin at nec nam et pharetra gravida. Adipiscing a quis
-            ultrices eu ornare tristique vel nisi orci.
+            Giúp bạn bắt đầu con đường chinh phục tiếng Nhật 1 cách dễ hiểu và
+            đáng nhớ nhất
           </p>
         </div>
       </section>
