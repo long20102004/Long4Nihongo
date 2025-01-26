@@ -67,7 +67,7 @@ export default function CoursePage({ params: paramsPromise }) {
   const [hadCourse, setHadCourse] = useState(false);
   const handleCheckout = () => {
     setChoosedCourse([course]);
-    localStorage.setItem("choosedCourses", course);
+    localStorage.setItem("choosedCourses", JSON.stringify(course));
     router.push("/checkout");
   };
   const [courses, setCourseData] = useState([]);
