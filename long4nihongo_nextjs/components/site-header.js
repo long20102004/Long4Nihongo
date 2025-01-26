@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { ThemeToggle } from "@/components/ui/toggle-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Mic } from "lucide-react";
-
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +19,7 @@ import { User, BookOpen, ShoppingCart, Key, LogOut } from "lucide-react";
 import { AuthModal } from "@/components/auth-model";
 import LoginPage from "@/app/login/login";
 import SignUpPage from "@/app/signup/signup";
+import { px } from "framer-motion";
 
 export default function Header({
   onTriggerLogin = () => {},
@@ -51,7 +52,7 @@ export default function Header({
       <div className="container mx-auto px-4 py-4 bg-background dark:bg-background">
         <nav className="flex items-center justify-between">
           <Link href="/" className="text-3xl font-bold text-primary">
-            ABCD
+            ロン日本語
           </Link>
           <div className="hidden md:flex items-center space-x-6">
             <Button
@@ -86,7 +87,7 @@ export default function Header({
               variant="ghost"
               className="text-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
-              <Link href="/about">Về Long4Nihongo</Link>
+              <Link href="/about">Về LongNihongo</Link>
             </Button>
           </div>
           <div className="flex items-center space-x-4">
