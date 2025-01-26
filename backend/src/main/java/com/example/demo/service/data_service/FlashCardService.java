@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -22,13 +23,19 @@ public class FlashCardService {
         Update update = new Update().set("isDeleted", 1);
         mongoTemplate.updateFirst(query, update, FlashCard.class);
     }
-    public List<FlashCard> findBySectionId(String sectionId){
-        return flashCardRepository.findAllByLessonSectionId(sectionId);
+    public List<FlashCard> findBySectionId(String sectionId) {
+        List<FlashCard> flashCards = flashCardRepository.findAllByLessonSectionId(sectionId);
+        flashCards.sort(Comparator.comparingInt(FlashCard::getOrder));
+        return flashCards;
     }
     public List<FlashCard> findAll(){
         return flashCardRepository.findAll();
     }
-    public void save(FlashCard flashCard){
+    public void save(FlashCard flashCard) {
+        if (flashCard.getOrder() == null) {
+            long maxOrder = flashCardRepository.count();
+            flashCard.setOrder((int) (maxOrder + 1));
+        }
         flashCardRepository.save(flashCard);
     }
     public FlashCard findById(String id){

@@ -28,6 +28,7 @@ public class Section {
     private String videoUrl;
     private int isDeleted;
     private int isDemo;
+    private Integer order;
     public Section(SectionDTO sectionDTO) {
         this.name = sectionDTO.getName();
         this.lessonId = sectionDTO.getLessonId();

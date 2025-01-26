@@ -20,6 +20,7 @@ public class FlashCard{
     private String example;
     private String imgUrl;
     private int isDeleted;
+    private Integer order;
     public FlashCard(FlashCardDTO flashCardDTO) {
         this.imgUrl = flashCardDTO.getImgUrl();
         this.sectionId = flashCardDTO.getSectionId();

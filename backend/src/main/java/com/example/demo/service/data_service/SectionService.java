@@ -6,13 +6,13 @@ import com.example.demo.model.Section;
 import com.example.demo.model.Word;
 import com.example.demo.repository.SectionRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -23,34 +23,45 @@ public class SectionService {
     private QuestionService questionService;
     private FlashCardService flashCardService;
     private MongoTemplate mongoTemplate;
+
     public void deleteById(String id) {
         System.out.println(id);
-        for (Word word: wordService.findBySectionId(id)){
+        for (Word word : wordService.findBySectionId(id)) {
             wordService.deleteById(word.getId());
         }
-        for (FlashCard flashCard: flashCardService.findBySectionId(id)){
+        for (FlashCard flashCard : flashCardService.findBySectionId(id)) {
             flashCardService.deleteById(flashCard.getId());
         }
-        for (Question question: questionService.findBySectionId(id)){
+        for (Question question : questionService.findBySectionId(id)) {
             questionService.deleteById(question.getId());
         }
         Query query = new Query(Criteria.where("_id").is(id));
         Update update = new Update().set("isDeleted", 1);
         mongoTemplate.updateFirst(query, update, Section.class);
     }
+
     public List<Section> findSectionByLessonId(int lessonId) {
-        return sectionRepository.findSectionByLessonId(lessonId);
+        List<Section> sections = sectionRepository.findSectionByLessonId(lessonId);
+        sections.sort(Comparator.comparingInt(Section::getOrder));
+        return sections;
     }
 
     public List<Section> findAll() {
-        return sectionRepository.findAll();
+        List<Section> sections = sectionRepository.findAll();
+        sections.sort(Comparator.comparingInt(Section::getOrder));
+        return sections;
     }
 
     public Section save(Section section) {
+        if (section.getOrder() == null) {
+            long totalSections = sectionRepository.count();
+            section.setOrder((int) totalSections + 1);
+        }
         return sectionRepository.save(section);
     }
 
-    public Section findById(String id){
-        return sectionRepository.findById(id).get();
+    public Section findById(String id) {
+        return sectionRepository.findById(id).orElse(null);
     }
+
 }
