@@ -1,3 +1,4 @@
+"use client";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/lib/context/ThemeProvider";
@@ -6,20 +7,37 @@ import { AuthProvider } from "@/lib/context/auth-context";
 import { CourseProvider } from "@/lib/context/course-provider";
 const inter = Inter({ subsets: ["latin"] });
 import { CourseCheckOutProvider } from "@/lib/context/course-checkout-content";
-export const metadata = {
-  Title: "Longnihongo - Your Path to Japanese Mastery",
-  Description:
-    "Dive into Japanese language and culture with Longnihongo. Start learning today!",
-  icons: {
-    icon: "/icon.png",
-    shortcut: "/icon.png", // Optional shortcut icon
-    apple: "/icon.png", // For Apple devices
-  },
-};
+import { usePathname } from "next/navigation";
+// export const metadata = {
+//   description:
+//     "Dive into Japanese language and culture with Longnihongo. Start learning today!",
+//   icons: {
+//     icon: "/icon.png",
+//     shortcut: "/icon.png", // Optional shortcut icon
+//     apple: "/icon.png", // For Apple devices
+//   },
+// };
 
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  let pageTitle = "Default Title"; // default title
+
+  // Dynamically change title based on the pathname
+  if (pathname === "/") {
+    pageTitle = "LongNihongo - Your Path to Japanese Mastery";
+  } else if (pathname === "/about") {
+    pageTitle = "About Me";
+  } else if (pathname.startsWith("/course")) {
+    pageTitle = "Course";
+  } else if (pathname === "/course") {
+    pageTitle = "Courses";
+  }
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/icon.png" />
+        <title>{pageTitle}</title>
+      </head>
       <body className={inter.className}>
         <CourseProvider>
           <CourseCheckOutProvider>
