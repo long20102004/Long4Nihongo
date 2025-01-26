@@ -46,7 +46,6 @@ export default function CheckoutPage() {
         totalPrice += course.price;
       });
       setPrice(totalPrice);
-      localStorage.setItem("choosedCourses", JSON.stringify(choosedCourse));
     }
     setPaymentUrl(
       `https://img.vietqr.io/image/970422-0981952931-qr_only.png?amount=${price}&addInfo=${description}&accountName=HOANG HAI LONG`

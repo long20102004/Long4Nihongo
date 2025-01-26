@@ -43,11 +43,6 @@ public class AdminController {
     }
     @GetMapping("/courses")
     public List<CourseAdminDTO> getAllCoursesAndData() {
-        for (FlashCard flashCard : flashCardService.findAll()){
-            String url = FileController.imageBucketUrl + flashCard.getMeaning().toLowerCase() + ".png";
-            flashCard.setImgUrl(url);
-            flashCardService.save(flashCard);
-        }
         List<Course> courses = courseService.findAll();
         List<CourseAdminDTO> courseAdminDTOS = new ArrayList<>();
         for (Course course : courses) {

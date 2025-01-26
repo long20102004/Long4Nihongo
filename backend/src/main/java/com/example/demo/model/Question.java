@@ -21,6 +21,7 @@ public class Question{
     private List<String> answers;
     private String correctAnswer;
     private int isDeleted;
+    private Integer order;
     public Question(QuestionDTO questionDTO) {
         this.sectionId = questionDTO.getSectionId();
         this.question = questionDTO.getQuestion();
