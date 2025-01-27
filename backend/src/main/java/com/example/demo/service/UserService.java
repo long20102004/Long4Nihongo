@@ -7,14 +7,15 @@ import com.example.demo.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -27,8 +28,19 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
+    }
+    public User findByUserName(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
     }
 
     public User registerUser(User user) {
@@ -43,17 +55,20 @@ public class UserService implements UserDetailsService {
                 user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
+                user.setName(rs.getString("name"));
+                user.setRole(rs.getString("role"));
                 return user;
             });
-        }
-        catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
-    public Set<Course> findCourseByUsername(String username){
+
+    public Set<Course> findCourseByUsername(String username) {
         return userRepository.findCourseByUsername(username);
     }
-    public List<User> findAll(){
+
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
@@ -70,10 +85,11 @@ public class UserService implements UserDetailsService {
         user.setIsDeleted(1);
         userRepository.save(user);
     }
-    public boolean checkIfUserHasCourse(HttpSession session, int courseId){
+
+    public boolean checkIfUserHasCourse(HttpSession session, int courseId) {
         String username = (String) session.getAttribute("USERNAME");
-        User user = loadUserByUsername(username);
-        if (user == null){
+        User user = findByUserName(username);
+        if (user == null) {
             return false;
         }
         for (Course course : user.getCourseSet()) {

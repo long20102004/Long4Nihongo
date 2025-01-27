@@ -21,7 +21,7 @@ public class PaymentController {
     @GetMapping("/my-receipts")
     public List<Receipt> getMyReceipt(HttpSession session){
         String username = (String) session.getAttribute("USERNAME");
-        User user = userService.loadUserByUsername(username);
+        User user = userService.findByUserName(username);
         return paymentService.findReceiptsByUserId(user.getId());
     }
 }

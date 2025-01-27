@@ -29,8 +29,10 @@ public class UserDTO {
         this.role = user.getRole();
         List<CourseDTO> courseDTOS = new ArrayList<>();
         Set<Course> courses = user.getCourseSet();
-        for (Course course : courses){
-            courseDTOS.add(new CourseDTO(course));
+        if (courses != null) {
+            for (Course course : courses) {
+                courseDTOS.add(new CourseDTO(course));
+            }
         }
         this.courses = courseDTOS;
     }

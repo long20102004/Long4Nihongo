@@ -1,25 +1,31 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
+import { apiFetch } from "@/lib/api-fetch";
 export default function Login({ setIsLoggedIn }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const login = async (username, password) => {
-    const response = await apiFetch("api/login", {
+    console.log("sending");
+    apiFetch("api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
-    });
-
-    if (response.ok) {
-      const userData = await response.json();
-      setIsLoggedIn(true);
-    } else {
-      throw new Error("Login failed");
-    }
+    })
+      .then((response) => {
+        if (response.ok) {
+          setIsLoggedIn(true);
+          localStorage.setItem("active", 1);
+        }
+        return response.json();
+      })
+      .then((data) => console.log(data))
+      .catch((error) => {
+        localStorage.setItem("active", 0);
+      });
   };
   const handleSubmit = (e) => {
+    e.preventDefault();
     login(username, password);
   };
 
