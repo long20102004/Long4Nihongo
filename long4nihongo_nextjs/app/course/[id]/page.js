@@ -11,6 +11,10 @@ import { useLessons } from "@/lib/context/lesson-provider";
 import { FlashCardd, Word, Question } from "@/lib/class";
 import { useAuth } from "@/lib/context/auth-context";
 import LoadingOverlay from "@/components/ui/LoadingOverLay";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+
 export default function CoursePage({ params: paramsPromise }) {
   const { user } = useAuth();
   const [contentType, setContentType] = useState("video");
@@ -22,6 +26,12 @@ export default function CoursePage({ params: paramsPromise }) {
   const [questions, setQuestions] = useState([]);
   const [video, setVideo] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.back();
+  };
+
   const isContentEmpty = () => {
     return (
       (contentType === "flashcard" && flashCards.length === 0) ||
@@ -76,10 +86,32 @@ export default function CoursePage({ params: paramsPromise }) {
       });
   }, [params.id, user, dataList]);
 
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-center max-w-md w-full">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
+            Login Required
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            Please log in to continue accessing this content.
+          </p>
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-center"
+            onClick={handleBack}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
-      {isLoading && <LoadingOverlay></LoadingOverlay>}
       <SiteHeader></SiteHeader>
+      {isLoading && <LoadingOverlay></LoadingOverlay>}
       <div className="min-h-screen bg-slate-200 dark:bg-background">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-12 gap-8">
