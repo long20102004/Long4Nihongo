@@ -107,6 +107,7 @@ export default function Header({
                       <AvatarFallback>
                         {user ? user.name.charAt(0).toUpperCase() : ""}
                       </AvatarFallback>
+
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
