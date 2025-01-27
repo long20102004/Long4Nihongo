@@ -209,20 +209,33 @@ export default function CoursePage({ params: paramsPromise }) {
 
                 {!hadCourse ? (
                   <>
-                    <Link href={`/course/${course.id}`}>
-                      <Button className=" w-full mb-2">Học thử</Button>
-                    </Link>
                     {user ? (
-                      <Button className="w-full mb-6" onClick={handleCheckout}>
-                        Đăng ký
-                      </Button>
+                      <>
+                        <Link href={`/course/${course.id}`}>
+                          <Button className=" w-full mb-2">Học thử</Button>
+                        </Link>
+                        <Button
+                          className="w-full mb-6"
+                          onClick={handleCheckout}
+                        >
+                          Đăng ký
+                        </Button>
+                      </>
                     ) : (
-                      <Button
-                        className="w-full mb-6"
-                        onClick={() => setTrigger(true)}
-                      >
-                        Đăng ký
-                      </Button>
+                      <>
+                        <Button
+                          className=" w-full mb-2"
+                          onClick={() => setTrigger(true)}
+                        >
+                          Học thử
+                        </Button>
+                        <Button
+                          className="w-full mb-6"
+                          onClick={() => setTrigger(true)}
+                        >
+                          Đăng ký
+                        </Button>
+                      </>
                     )}
                   </>
                 ) : (
