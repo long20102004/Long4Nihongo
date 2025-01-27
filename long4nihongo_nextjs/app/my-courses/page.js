@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Card,
   CardContent,
@@ -17,9 +18,11 @@ import Link from "next/link";
 import { apiFetch } from "@/lib/api-fetch";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import LoadingOverlay from "@/components/ui/LoadingOverLay";
+
 export default function CoursesPage() {
   const [courses, setCourses] = useState([]);
   const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     apiFetch("api/my-courses")
       .then((response) => response.json())
@@ -28,71 +31,98 @@ export default function CoursesPage() {
         setCourses(data);
       });
   }, []);
+
+  const totalProgress =
+    courses.length > 0
+      ? (
+          courses.reduce((sum, course) => sum + (course.progress || 0), 0) /
+          courses.length
+        ).toFixed(1)
+      : 0;
+
   return (
-    <div className="bg-background">
+    <div className="bg-background min-h-screen">
       {isLoading && <LoadingOverlay />}
       <Header />
-      <div className="mx-auto container space-y-8">
+      <div className="mx-auto container space-y-8 p-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold p-6">Khóa học của tôi</h1>
+            <h1 className="text-3xl font-bold">Khóa học của tôi</h1>
             <p className="text-muted-foreground">Học tiếp ngay nào</p>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
               <p className="text-sm text-muted-foreground">Tổng quá trình</p>
-              <p className="text-2xl font-bold">46.7%</p>
+              <p className="text-2xl font-bold">{totalProgress}%</p>
             </div>
             <Trophy className="w-8 h-8 text-yellow-500" />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course) => (
-            <Card key={course.id} className="overflow-hidden">
-              <CardHeader className="p-0">
-                <div className="relative h-48">
-                  <Image
-                    src={course.imageUrl || "/placeholder.svg"}
-                    alt={course.name}
-                    fill
-                    className="object-cover"
-                  />
-                  <Badge className="absolute top-4 right-4">
-                    {course.level}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                <CardTitle className="mb-4">{course.name}</CardTitle>
-                <div className="space-y-4">
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <BookOpen className="w-4 h-4" />
-                      <span>12/20 Bài học</span>
+        {courses.length === 0 ? (
+          <Card className="p-6 text-center">
+            <CardContent className="space-y-4">
+              <p className="text-xl font-semibold">Bạn chưa có khóa học nào</p>
+              <p className="text-muted-foreground">
+                Hãy khám phá các khóa học của chúng tôi để bắt đầu hành trình
+                học tập của bạn!
+              </p>
+              <Link href="/courses">
+                <Button className="mt-4">Khám phá khóa học</Button>
+              </Link>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {courses.map((course) => (
+              <Card key={course.id} className="overflow-hidden">
+                <CardHeader className="p-0">
+                  <div className="relative h-48">
+                    <Image
+                      src={course.imageUrl || "/placeholder.svg"}
+                      alt={course.name}
+                      fill
+                      className="object-cover"
+                    />
+                    <Badge className="absolute top-4 right-4">
+                      {course.level}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <CardTitle className="mb-4">{course.name}</CardTitle>
+                  <div className="space-y-4">
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-4 h-4" />
+                        <span>
+                          {course.completedLessons}/{course.totalLessons} Bài
+                          học
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        <span>{course.duration} giờ</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>20 giờ</span>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>Quá trình</span>
+                        <span>20%</span>
+                      </div>
+                      <Progress value="20" />
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Quá trình</span>
-                      <span>20%</span>
-                    </div>
-                    <Progress value="20" />
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="p-6 pt-0">
-                <Link href={`/course/${course.id}`}>
-                  <Button className="w-full">Học tiếp</Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+                </CardContent>
+                <CardFooter className="p-6 pt-0">
+                  <Link href={`/course/${course.id}`}>
+                    <Button className="w-full">Học tiếp</Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

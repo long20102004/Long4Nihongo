@@ -104,7 +104,9 @@ export default function Header({
                         src={user !== null ? user.avatarUrl : ""}
                         alt={user !== null ? user.name : ""}
                       />
-                      <AvatarFallback>L</AvatarFallback>
+                      <AvatarFallback>
+                        {user ? user.name.charAt(0).toUpperCase() : ""}
+                      </AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
