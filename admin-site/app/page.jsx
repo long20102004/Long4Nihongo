@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCourseManagement } from "../hooks/useCourseManagement";
 import { CourseList } from "../components/CourseList";
 import { LessonList } from "../components/LessonList";
@@ -11,10 +11,13 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import UserManagement from "../components/UserManagement";
 import Login from "../components/Login";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function Home() {
-  const [currentView, setCurrentView] = useState("courses");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentView, setCurrentView] = useState("courses");
+  const [isLoading, setIsLoading] = useState(true);
+
   const {
     courses,
     selectedCourse,
@@ -40,7 +43,43 @@ export default function Home() {
     setNewLesson,
     setNewSection,
     setEditMode,
+    fetchCourses,
   } = useCourseManagement();
+
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const isActive = localStorage.getItem("active");
+      if (isActive === "1") {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLoginStatus();
+    window.addEventListener("storage", checkLoginStatus);
+
+    return () => {
+      window.removeEventListener("storage", checkLoginStatus);
+    };
+  }, []);
+
+  useEffect(() => {
+    const loadCourses = async () => {
+      setIsLoading(true);
+      await fetchCourses();
+      setIsLoading(false);
+    };
+
+    if (isLoggedIn) {
+      loadCourses();
+    }
+  }, [isLoggedIn, fetchCourses]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("active");
+    setIsLoggedIn(false);
+  };
 
   if (!isLoggedIn) {
     return <Login setIsLoggedIn={setIsLoggedIn} />;
@@ -48,7 +87,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <Header />
+      <Header onLogout={handleLogout} />
       <div className="flex">
         <Sidebar setCurrentView={setCurrentView} />
         <main className="flex-1 p-8">

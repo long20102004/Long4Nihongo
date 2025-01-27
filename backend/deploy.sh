@@ -12,3 +12,5 @@ mvn clean package
 
 # Upload the JAR file to the VM
 scp $JAR_FILE $VM_USER@$VM_HOST:$VM_PATH
+sudo systemctl restart myapp.service
+#sudo journalctl -u myapp.service -f
