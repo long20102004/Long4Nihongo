@@ -11,24 +11,30 @@ import {
   DollarSign,
   User,
   Book,
+  Receipt,
 } from "lucide-react";
 import Header from "@/components/site-header";
 import { apiFetch } from "@/lib/api-fetch";
 import LoadingOverlay from "@/components/ui/LoadingOverLay";
+import Link from "next/link";
+
 export default function MyReceiptsPage() {
   const { user } = useAuth();
   const [receipts, setReceipts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulating API call to fetch receipts
     const fetchReceipts = async () => {
       setIsLoading(true);
-      // Replace this with actual API call
-      apiFetch("api/my-receipts")
-        .then((response) => response.json())
-        .then((data) => setReceipts(data));
-      setIsLoading(false);
+      try {
+        const response = await apiFetch("api/my-receipts");
+        const data = await response.json();
+        setReceipts(data);
+      } catch (error) {
+        console.error("Failed to fetch receipts:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchReceipts();
@@ -37,7 +43,7 @@ export default function MyReceiptsPage() {
   if (!user) {
     return (
       <>
-        <Header></Header>
+        <Header />
         <div className="text-center mt-8">
           Please log in to view your receipts.
         </div>
@@ -58,7 +64,7 @@ export default function MyReceiptsPage() {
 
   return (
     <>
-      {isLoading && <LoadingOverlay></LoadingOverlay>}
+      {isLoading && <LoadingOverlay />}
       <Header />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 text-primary">My Receipts</h1>
@@ -66,6 +72,20 @@ export default function MyReceiptsPage() {
           <div className="flex justify-center items-center h-64">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
+        ) : receipts.length === 0 ? (
+          <Card className="p-6 text-center">
+            <CardContent className="space-y-4">
+              <Receipt className="mx-auto h-12 w-12 text-muted-foreground" />
+              <CardTitle>No Receipts Found</CardTitle>
+              <p className="text-muted-foreground">
+                You haven't made any purchases yet. Explore our courses to get
+                started!
+              </p>
+              <Link href="/courses">
+                <Button className="mt-4">Explore Courses</Button>
+              </Link>
+            </CardContent>
+          </Card>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {receipts.map((receipt) => (
