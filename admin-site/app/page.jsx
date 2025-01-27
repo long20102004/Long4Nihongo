@@ -14,7 +14,7 @@ import Login from "../components/Login";
 
 export default function Home() {
   const [currentView, setCurrentView] = useState("courses");
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const {
     courses,
     selectedCourse,
@@ -43,7 +43,7 @@ export default function Home() {
   } = useCourseManagement();
 
   if (!isLoggedIn) {
-    return <Login onLogin={() => setIsLoggedIn(true)} />;
+    return <Login setIsLoggedIn={setIsLoggedIn} />;
   }
 
   return (

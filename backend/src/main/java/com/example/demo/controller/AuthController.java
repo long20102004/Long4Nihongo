@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.UserDTO;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
@@ -26,11 +27,11 @@ public class AuthController {
         return ResponseEntity.ok(registeredUser);
     }
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user, HttpSession session) {
+    public ResponseEntity<?> loginUser(@RequestBody UserDTO user, HttpSession session) {
         User authenticatedUser = userService.authenticateUser(user.getUsername(), user.getPassword());
         if (authenticatedUser != null) {
             session.setAttribute("USERNAME", authenticatedUser.getUsername());
-            return ResponseEntity.ok(authenticatedUser);
+            return ResponseEntity.ok(new UserDTO(authenticatedUser));
         }
         return ResponseEntity.badRequest().body("Invalid credentials");
     }
