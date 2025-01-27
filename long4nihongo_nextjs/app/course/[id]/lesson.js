@@ -14,7 +14,7 @@ import Section from "./section";
 import { apiFetch } from "@/lib/api-fetch";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/context/auth-context";
-export default function Lesson({ lesson }) {
+export default function Lesson({ lesson, setLoading }) {
   const [sections, setSection] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const { user } = useAuth();
@@ -24,12 +24,11 @@ export default function Lesson({ lesson }) {
       .then((response) => response.json())
       .then((data) => {
         setSection(data);
+        setLoading(false);
       });
     // }
   }, [user]);
-  const handleSectionSelect = (sectionId) => {
-    setSelectedSectionId(sectionId);
-  };
+
   return (
     <Collapsible>
       <CollapsibleTrigger className="w-full">

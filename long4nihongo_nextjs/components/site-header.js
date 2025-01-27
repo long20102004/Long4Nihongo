@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/ui/toggle-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Mic } from "lucide-react";
 import Image from "next/image";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +20,6 @@ import { User, BookOpen, ShoppingCart, Key, LogOut } from "lucide-react";
 import { AuthModal } from "@/components/auth-model";
 import LoginPage from "@/app/login/login";
 import SignUpPage from "@/app/signup/signup";
-import { px } from "framer-motion";
 
 export default function Header({
   onTriggerLogin = () => {},
@@ -32,6 +32,7 @@ export default function Header({
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+
   const handleLogout = async () => {
     await logout();
     setIsOpen(false);

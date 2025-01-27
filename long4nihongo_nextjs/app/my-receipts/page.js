@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/site-header";
 import { apiFetch } from "@/lib/api-fetch";
+import LoadingOverlay from "@/components/ui/LoadingOverLay";
 export default function MyReceiptsPage() {
   const { user } = useAuth();
   const [receipts, setReceipts] = useState([]);
@@ -57,6 +58,7 @@ export default function MyReceiptsPage() {
 
   return (
     <>
+      {isLoading && <LoadingOverlay></LoadingOverlay>}
       <Header />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 text-primary">My Receipts</h1>

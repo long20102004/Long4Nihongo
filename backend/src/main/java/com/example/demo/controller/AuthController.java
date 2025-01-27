@@ -3,14 +3,22 @@ package com.example.demo.controller;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -53,5 +61,32 @@ public class AuthController {
     public ResponseEntity<?> logoutUser(HttpSession session) {
         session.invalidate();
         return ResponseEntity.ok("Logged out successfully");
+    }
+
+    @PostMapping("/auth/google")
+    public ResponseEntity<?> authenticate(@RequestBody Map<String, String> body) {
+        String idToken = body.get("token");
+
+        try {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+                    .setAudience(Collections.singletonList("your-google-client-id"))
+                    .build();
+
+            GoogleIdToken googleIdToken = verifier.verify(idToken);
+            if (googleIdToken != null) {
+                GoogleIdToken.Payload payload = googleIdToken.getPayload();
+                String email = payload.getEmail();
+                String name = (String) payload.get("name");
+
+                // Process the user (e.g., save in the database)
+                // ...
+
+                return ResponseEntity.ok("Authentication successful");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during authentication");
+        }
     }
 }

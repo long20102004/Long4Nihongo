@@ -82,7 +82,7 @@ export function CourseNode({ course, index, total, scrollProgress }) {
                 </span>
                 <Link href={`/course-introduce/${course.id}`}>
                   <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-md transition-colors text-lg">
-                    Đăng ký
+                    Tham khảo ngay
                   </button>
                 </Link>
               </CardFooter>
@@ -94,11 +94,7 @@ export function CourseNode({ course, index, total, scrollProgress }) {
               isRight ? "text-left" : "text-right"
             }`}
           >
-            <p className="text-xl leading-relaxed">
-              {isRight
-                ? "Take the next step in your educational path. This course offers in-depth knowledge and practical experience to elevate your understanding and capabilities."
-                : "Embark on your learning journey with this course. Master new skills, tackle challenging concepts, and prepare yourself for the next level of expertise in your field."}
-            </p>
+            <p className="text-xl leading-relaxed">{course.description}</p>
           </div>
 
           {isRight && (
@@ -120,7 +116,7 @@ export function CourseNode({ course, index, total, scrollProgress }) {
                 </span>
                 <Link href={`/course-introduce/${course.id}`}>
                   <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-md transition-colors text-lg">
-                    Enroll Now
+                    Tham khảo ngay
                   </button>
                 </Link>
               </CardFooter>

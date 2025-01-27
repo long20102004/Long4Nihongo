@@ -10,8 +10,7 @@ import Lesson from "./lesson";
 import { useLessons } from "@/lib/context/lesson-provider";
 import { FlashCardd, Word, Question } from "@/lib/class";
 import { useAuth } from "@/lib/context/auth-context";
-import { useRouter } from "next/navigation";
-
+import LoadingOverlay from "@/components/ui/LoadingOverLay";
 export default function CoursePage({ params: paramsPromise }) {
   const { user } = useAuth();
   const [contentType, setContentType] = useState("video");
@@ -21,19 +20,17 @@ export default function CoursePage({ params: paramsPromise }) {
   const [flashCards, setFlashCards] = useState([]);
   const [words, setWords] = useState([]);
   const [questions, setQuestions] = useState([]);
-  const [haveCourse, setHaveCourse] = useState(false);
-  const [video, setVideo] = useState("");
-
+  const [video, setVideo] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   const isContentEmpty = () => {
     return (
       (contentType === "flashcard" && flashCards.length === 0) ||
       (contentType === "quiz" && questions.length === 0) ||
-      (contentType === "video" && video === "test")
+      (contentType === "video" && video === null)
     );
   };
-
   useEffect(() => {
-    setVideo(dataList.videoUrl === "test" ? "test" : dataList.videoUrl);
+    setVideo(dataList.videoUrl);
     const newFlashCards = [];
     const newWords = [];
     const newQuestions = [];
@@ -81,6 +78,7 @@ export default function CoursePage({ params: paramsPromise }) {
 
   return (
     <>
+      {isLoading && <LoadingOverlay></LoadingOverlay>}
       <SiteHeader></SiteHeader>
       <div className="min-h-screen bg-slate-200 dark:bg-background">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -92,7 +90,12 @@ export default function CoursePage({ params: paramsPromise }) {
                 </h2>
                 <div className="space-y-4">
                   {lessons.map((section, index) => (
-                    <Lesson key={index} lesson={section} index={index} />
+                    <Lesson
+                      setLoading={setLoading}
+                      key={index}
+                      lesson={section}
+                      index={index}
+                    />
                   ))}
                 </div>
               </div>
