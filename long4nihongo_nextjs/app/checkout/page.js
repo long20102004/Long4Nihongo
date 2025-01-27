@@ -9,13 +9,14 @@ import { useAuth } from "@/lib/context/auth-context";
 import { apiFetch } from "@/lib/api-fetch";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import LoadingOverlay from "@/components/ui/LoadingOverLay";
 export default function CheckoutPage() {
   const [paymentUrl, setPaymentUrl] = useState("/window.svg");
   const { choosedCourse, setChoosedCourse } = useChoosedCourse();
   const { user } = useAuth();
   const router = useRouter();
   const [price, setPrice] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [courses, setCourseData] = useState([]);
   useEffect(() => {
@@ -52,12 +53,21 @@ export default function CheckoutPage() {
     );
   }, [choosedCourse, user, price]);
   const handleCheck = () => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    // Cleanup the timer if the component unmounts before the timeout
+
+    () => clearTimeout(timer);
     if (choosedCourse) {
       apiFetch(`api/check-course/${choosedCourse[0].id}`, {
         method: "POST",
       })
         .then((response) => {
           if (response.ok) {
+            setIsLoading(false);
             router.push("/my-courses");
           }
         })
@@ -73,6 +83,7 @@ export default function CheckoutPage() {
     <>
       <SiteHeader />
       <div className="p-6 min-h-screen container bg-background text-foreground">
+        {isLoading && <LoadingOverlay></LoadingOverlay>}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Payment Form */}
           <div className="lg:col-span-2">
@@ -165,8 +176,9 @@ export default function CheckoutPage() {
                     <div>
                       <h3 className="font-medium">{item.name}</h3>
                       <p className="text-muted-foreground text-sm">
-                        {item.description}
+                        {item.description.split(".")[0]}.
                       </p>
+
                       <p className="text-primary font-semibold mt-1">
                         {item.price}
                       </p>

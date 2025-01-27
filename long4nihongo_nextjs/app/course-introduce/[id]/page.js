@@ -25,6 +25,7 @@ import { apiFetch } from "@/lib/api-fetch";
 import { useAuth } from "@/lib/context/auth-context";
 import { useRouter } from "next/navigation";
 import { useChoosedCourse } from "@/lib/context/course-checkout-content";
+import LoadingOverlay from "@/components/ui/LoadingOverLay";
 function StarRating({ rating }) {
   return (
     <div className="flex items-center">
@@ -65,6 +66,7 @@ export default function CoursePage({ params: paramsPromise }) {
   const [trigger, setTrigger] = useState(false);
   const { setChoosedCourse } = useChoosedCourse();
   const [hadCourse, setHadCourse] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const handleCheckout = () => {
     setChoosedCourse([course]);
     localStorage.setItem("choosedCourses", JSON.stringify([course]));
@@ -84,6 +86,7 @@ export default function CoursePage({ params: paramsPromise }) {
       .then((response) => response.json())
       .then((data) => {
         setCourse(data);
+        setLoading(false);
       });
 
     apiFetch(`api/check-course/${params.id}`, { method: "POST" }).then(
@@ -101,6 +104,7 @@ export default function CoursePage({ params: paramsPromise }) {
 
   return (
     <>
+      {isLoading && <LoadingOverlay></LoadingOverlay>}
       <Header
         onTriggerLogin={trigger}
         setTriggerLogin={setTrigger}
@@ -165,7 +169,7 @@ export default function CoursePage({ params: paramsPromise }) {
                                 chuẩn bị bắt đầu học tiếng Nhật
                               </p>
                               <div className="text-sm text-muted-foreground mt-1">
-                                1 Month ago
+                                1 Tháng trước
                               </div>
                             </div>
                           </div>
@@ -238,7 +242,7 @@ export default function CoursePage({ params: paramsPromise }) {
                     </div>
                     <div className="flex gap-2">
                       <DevicePhoneIcon className="h-5 w-5 text-teal-500" />
-                      <span>Truy cập trên mọi thiết bị</span>
+                      <span>Luyện kaiwa với AI</span>
                     </div>
                     <div className="flex gap-2">
                       <Award className="h-5 w-5 text-teal-500" />
@@ -246,7 +250,7 @@ export default function CoursePage({ params: paramsPromise }) {
                     </div>
                     <div className="flex gap-2">
                       <Clock className="h-5 w-5 text-teal-500" />
-                      <span>5 Phần</span>
+                      <span>5 chương với 38 bài học</span>
                     </div>
                   </div>
                 </div>

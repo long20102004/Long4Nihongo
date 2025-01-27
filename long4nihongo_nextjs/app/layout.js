@@ -8,6 +8,8 @@ import { CourseProvider } from "@/lib/context/course-provider";
 const inter = Inter({ subsets: ["latin"] });
 import { CourseCheckOutProvider } from "@/lib/context/course-checkout-content";
 import { usePathname } from "next/navigation";
+import { SessionProvider } from "next-auth/react";
+
 // export const metadata = {
 //   description:
 //     "Dive into Japanese language and culture with Longnihongo. Start learning today!",

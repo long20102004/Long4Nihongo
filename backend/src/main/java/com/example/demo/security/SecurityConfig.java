@@ -61,15 +61,15 @@ public class SecurityConfig {
         return new SimpleUrlAuthenticationSuccessHandler() {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-//                OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-//                String id = oauth2User.getAttribute("id");
-//                if (id == null) id = oauth2User.getAttribute("email");
-//                User user = (User) userService.loadUserByUsername(id);
-//                if (user == null) {
-//                    user = new User();
-//                    user.setUsername(id);
-//                    userService.saveUser(user);
-//                }
+                OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+                String id = oauth2User.getAttribute("id");
+                if (id == null) id = oauth2User.getAttribute("email");
+                User user = userService.findByUserName(id);
+                if (user == null) {
+                    user = new User();
+                    user.setUsername(id);
+                    userService.save(user);
+                }
             }
 
             @Override

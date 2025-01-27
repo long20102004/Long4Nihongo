@@ -72,7 +72,7 @@ export function FlashCard({ flashcards }) {
             <div className="p-6 space-y-4">
               <div className="aspect-square flex items-center justify-center">
                 <Image
-                  src={currentCard.imgUrl}
+                  src={currentCard.imgUrl || null}
                   alt="Illustration"
                   width={360} // Adjust the width as needed
                   height={360} // Adjust the height as needed

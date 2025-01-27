@@ -8,8 +8,10 @@ import SubtleParticleBackground from "@/components/ui/snow-effect";
 import SiteHeader from "@/components/site-header";
 import { apiFetch } from "@/lib/api-fetch";
 import { useChoosedCourse } from "@/lib/context/course-checkout-content";
+import LoadingOverlay from "@/components/ui/LoadingOverLay";
 
 export default function CourseJourney() {
+  const [isLoading, setLoading] = useState(true);
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -22,11 +24,13 @@ export default function CourseJourney() {
       .then((response) => response.json())
       .then((data) => {
         setCourseData(data);
+        setLoading(false);
       });
   }, []);
 
   return (
     <div className="min-h-screen bg-background dark:from-slate-900 dark:to-slate-800 text-slate-900 dark:text-white">
+      {isLoading && <LoadingOverlay></LoadingOverlay>}
       <SubtleParticleBackground />
       <SiteHeader />
       <motion.h1

@@ -15,15 +15,22 @@ import Header from "@/components/site-header";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api-fetch";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import LoadingOverlay from "@/components/ui/LoadingOverLay";
 export default function CoursesPage() {
   const [courses, setCourses] = useState([]);
+  const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     apiFetch("api/my-courses")
       .then((response) => response.json())
-      .then((data) => setCourses(data));
+      .then((data) => {
+        setLoading(false);
+        setCourses(data);
+      });
   }, []);
   return (
     <div className="bg-background">
+      {isLoading && <LoadingOverlay />}
       <Header />
       <div className="mx-auto container space-y-8">
         <div className="flex justify-between items-center">
