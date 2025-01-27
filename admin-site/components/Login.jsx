@@ -1,15 +1,27 @@
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-export default function Login({ onLogin }) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+export default function Login({ setIsLoggedIn }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const login = async (username, password) => {
+    const response = await apiFetch("api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
 
+    if (response.ok) {
+      const userData = await response.json();
+      setIsLoggedIn(true);
+    } else {
+      throw new Error("Login failed");
+    }
+  };
   const handleSubmit = (e) => {
-    e.preventDefault()
-    onLogin(username, password)
-  }
+    login(username, password);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
@@ -22,7 +34,9 @@ export default function Login({ onLogin }) {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="username" className="sr-only">Username</label>
+              <label htmlFor="username" className="sr-only">
+                Username
+              </label>
               <Input
                 id="username"
                 name="username"
@@ -35,7 +49,9 @@ export default function Login({ onLogin }) {
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <Input
                 id="password"
                 name="password"
@@ -60,6 +76,5 @@ export default function Login({ onLogin }) {
         </form>
       </div>
     </div>
-  )
+  );
 }
-

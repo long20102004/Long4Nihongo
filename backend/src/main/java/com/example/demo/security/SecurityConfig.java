@@ -42,8 +42,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
-                        request.requestMatchers("/", "oauth2/**", "/login/**", "/register", "/courses/**", "/valid", "/course/**", "/api/**", "/admin/**", "/files/**", "/hooks/sepay-payment", "/api/check-course/**").permitAll()
-                        .requestMatchers("/edit/**").hasRole("ADMIN")
+                        request.requestMatchers("/", "oauth2/**", "/login/**", "/register", "/courses/**", "/valid", "/course/**", "/api/**", "/files/**", "/hooks/sepay-payment", "/api/check-course/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(sessionManagement -> {
                     sessionManagement.maximumSessions(1).maxSessionsPreventsLogin(true).sessionRegistry(sessionRegistry());
