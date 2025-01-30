@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Mic, Send, Play } from "lucide-react";
 import Header from "@/components/site-header";
@@ -15,6 +15,10 @@ export default function VoiceAssistant() {
   const synthRef = useRef(null);
   const [lastPlayedMessageId, setLastPlayedMessageId] = useState(null);
   const isPlayingRef = useRef(false);
+  const [currentLanguage, setCurrentLanguage] = useState({
+    speak: "ja-JP",
+    listen: "ja-JP",
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -23,7 +27,7 @@ export default function VoiceAssistant() {
         window.webkitSpeechRecognition)();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = "ja-JP";
+      recognitionRef.current.lang = currentLanguage.listen;
 
       recognitionRef.current.onresult = (event) => {
         const transcript = Array.from(event.results)
@@ -39,10 +43,12 @@ export default function VoiceAssistant() {
 
       const loadVoices = () => {
         const voices = synthRef.current.getVoices();
-        console.log("Available voices:", voices); // Debug voice availability
+        console.log("Available voices:", voices);
 
         const preferredVoice = voices.find(
-          (voice) => voice.lang === "ja-JP" && voice.name.includes("Google")
+          (voice) =>
+            voice.lang === currentLanguage.speak &&
+            voice.name.includes("Google")
         );
         if (preferredVoice) {
           synthRef.current.preferredVoice = preferredVoice;
@@ -61,7 +67,7 @@ export default function VoiceAssistant() {
         loadVoices();
       }
     }
-  }, [setInput]);
+  }, [setInput, currentLanguage]);
 
   const speak = (text) => {
     if (synthRef.current) {
@@ -75,39 +81,34 @@ export default function VoiceAssistant() {
         isPlayingRef.current = true;
         setIsSpeaking(true);
 
-        const utterance = new SpeechSynthesisUtterance(text);
+        // Extract only the Japanese part (before the opening parenthesis)
+        const japaneseText = text.split("(")[0].trim();
+
+        const utterance = new SpeechSynthesisUtterance(japaneseText);
         utterance.lang = "ja-JP";
 
-        // Use the preferred voice
-        if (synthRef.current.preferredVoice) {
-          utterance.voice = synthRef.current.preferredVoice;
+        // Find the appropriate voice for Japanese
+        const voices = synthRef.current.getVoices();
+        const preferredVoice = voices.find(
+          (voice) => voice.lang === "ja-JP" && voice.name.includes("Google")
+        );
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
         }
 
-        // Handle the end of speech
         utterance.onend = () => {
           console.log("Speech synthesis ended successfully.");
           setIsSpeaking(false);
           isPlayingRef.current = false;
         };
 
-        // Handle errors during speech
         utterance.onerror = (event) => {
           console.error("Speech synthesis error:", event);
           setIsSpeaking(false);
           isPlayingRef.current = false;
         };
 
-        // Handle interruptions
-        utterance.onpause = () => {
-          console.warn("Speech synthesis paused.");
-        };
-
-        utterance.onresume = () => {
-          console.log("Speech synthesis resumed.");
-        };
-
-        // Start speaking
-        console.log("Starting speech synthesis...");
+        console.log("Starting speech synthesis for Japanese...");
         synthRef.current.speak(utterance);
       }
     } else {
@@ -116,8 +117,7 @@ export default function VoiceAssistant() {
   };
 
   const replayMessage = (messageId, content) => {
-    const japaneseText = content.split("(")[0].trim();
-    speak(japaneseText);
+    speak(content);
   };
 
   const toggleListening = () => {
@@ -252,6 +252,19 @@ export default function VoiceAssistant() {
           <div className="p-4 border-t border-gray-800">
             <div className="flex gap-2">
               <Button
+                onClick={() =>
+                  setCurrentLanguage((prevLang) => ({
+                    speak: prevLang.speak === "ja-JP" ? "vi-VN" : "ja-JP",
+                    listen: prevLang.listen === "ja-JP" ? "vi-VN" : "ja-JP",
+                  }))
+                }
+                className="h-12 px-6 bg-gray-800 hover:bg-gray-700 mr-2"
+              >
+                {currentLanguage.speak === "ja-JP"
+                  ? "Switch to Vietnamese"
+                  : "Switch to Japanese"}
+              </Button>
+              <Button
                 onClick={toggleListening}
                 className={`flex-1 h-12 ${
                   isListening
@@ -260,7 +273,17 @@ export default function VoiceAssistant() {
                 }`}
               >
                 <Mic className="w-5 h-5 mr-2" />
-                {isListening ? "Listening..." : "Start Listening"}
+                {isListening
+                  ? `Listening (${
+                      currentLanguage.listen === "ja-JP"
+                        ? "Japanese"
+                        : "Vietnamese"
+                    })...`
+                  : `Start Listening (${
+                      currentLanguage.listen === "ja-JP"
+                        ? "Japanese"
+                        : "Vietnamese"
+                    })`}
               </Button>
               {input && (
                 <Button
