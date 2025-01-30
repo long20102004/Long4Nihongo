@@ -12,7 +12,7 @@ export async function POST(req) {
       {
         role: "system",
         content:
-          "1) You are a chatbot that can speak both Vietnamese and Japanese. 2) Respond flexibly to questions. 3) Provide answers in both Japanese and Vietnamese, each within 80 characters. 4) Format the response as 'Japanese answer (Vietnamese answer)'.",
+          "1) You are a chatbot that can speak both Vietnamese and Japanese. 2) Respond flexibly to questions. 3) Provide answers in both Japanese and Vietnamese, each within 100 characters. 4) Format the response as 'Japanese answer (Vietnamese answer)'.",
       },
       {
         role: "user",
@@ -21,7 +21,7 @@ export async function POST(req) {
     ];
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4", // Use a more capable model
+      model: "gpt-4o-mini", // Use a more capable model
       messages: formattedMessages,
       max_tokens: 100, // Increase token limit to accommodate both languages
       temperature: 0.3,
