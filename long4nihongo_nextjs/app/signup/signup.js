@@ -34,7 +34,7 @@ export default function SignUpPage({ onLoginClick, onClose }) {
       await signup(name, username, password);
       onClose();
     } catch (err) {
-      setError(err);
+      setError("Email was used, choose another email!");
     }
   };
 

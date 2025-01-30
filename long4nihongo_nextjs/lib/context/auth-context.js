@@ -53,20 +53,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = async (name, username, password) => {
-    try {
-      const response = await apiFetch("api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, username, password }),
-      });
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      } else {
-        throw error;
-      }
-    } catch (error) {
-      throw new Error(error);
+    const response = await apiFetch("api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, username, password }),
+    });
+    if (response.ok) {
+      const userData = await response.json();
+      setUser(userData);
+    } else {
+      console.log("failed");
+      throw new Error("Signup failed");
     }
   };
   const logout = async () => {
