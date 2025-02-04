@@ -1,5 +1,5 @@
 export async function apiFetch(url, options = {}) {
-  const baseUrl = NEXT_PUBLIC_API_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const finalUrl = url.startsWith("http") ? url : `${baseUrl}/${url}`;
   const { method = "GET", ...restOptions } = options;
   const response = await fetch(finalUrl, {
