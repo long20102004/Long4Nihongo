@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
@@ -37,13 +38,25 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserDTO user, HttpSession session) {
         User authenticatedUser = userService.authenticateUser(user.getUsername(), user.getPassword());
+
         if (authenticatedUser != null) {
+            // Set authentication in Spring Security context
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    authenticatedUser, null, authenticatedUser.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Store authentication in session
+            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
             session.setAttribute("USERNAME", authenticatedUser.getUsername());
+            System.out.println("Authenticated user role: " + authenticatedUser.getRole());
             UserDTO userDTO = new UserDTO(authenticatedUser);
             return ResponseEntity.ok(userDTO);
         }
+
         return ResponseEntity.badRequest().body("Invalid credentials");
     }
+
 
     @PostMapping("/user")
     public ResponseEntity<?> getUser(HttpSession session) {
