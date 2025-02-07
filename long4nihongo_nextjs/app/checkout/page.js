@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LoadingOverlay from "@/components/ui/LoadingOverLay";
 import { toast } from "@/components/ui/use-toast";
+
 export default function CheckoutPage() {
   const [paymentUrl, setPaymentUrl] = useState("/window.svg");
   const { choosedCourse, setChoosedCourse } = useChoosedCourse();
@@ -106,7 +107,9 @@ export default function CheckoutPage() {
         });
     }
   };
-
+  const handleBack = () => {
+    router.back();
+  };
   const handleApplyCoupon = () => {
     apiFetch("api/check-coupon", {
       method: "POST",
