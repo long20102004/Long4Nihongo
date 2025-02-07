@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LoadingOverlay from "@/components/ui/LoadingOverLay";
 import { toast } from "@/components/ui/use-toast";
+import { ArrowLeft } from "lucide-react";
 
 export default function CheckoutPage() {
   const [paymentUrl, setPaymentUrl] = useState("/window.svg");
@@ -64,24 +65,6 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (!user || !choosedCourse) {
-  //     setPaymentUrl("/window.svg");
-  //     return;
-  //   }
-  //   let description = user.id + " dang ky khoa ";
-  //   if (choosedCourse.length > 0) {
-  //     let totalPrice = 0;
-  //     choosedCourse.forEach((course) => {
-  //       description += course.id + " ";
-  //       totalPrice += course.price;
-  //     });
-  //     setPrice(totalPrice);
-  //   }
-  //   setPaymentUrl(
-  //     `https://img.vietqr.io/image/970422-0981952931-qr_only.png?amount=${price}&addInfo=${description}&accountName=HOANG HAI LONG`
-  //   );
-  // }, [choosedCourse, user, price]);
   const handleCheck = () => {
     setIsLoading(true);
     const timer = setTimeout(() => {
