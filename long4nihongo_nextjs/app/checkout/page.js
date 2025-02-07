@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import SiteHeader from "@/components/site-header";
 import { useEffect, useState } from "react";
@@ -10,6 +11,7 @@ import { apiFetch } from "@/lib/api-fetch";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LoadingOverlay from "@/components/ui/LoadingOverLay";
+import { toast } from "@/components/ui/use-toast";
 export default function CheckoutPage() {
   const [paymentUrl, setPaymentUrl] = useState("/window.svg");
   const { choosedCourse, setChoosedCourse } = useChoosedCourse();
@@ -19,7 +21,14 @@ export default function CheckoutPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [courses, setCourseData] = useState([]);
+  const [coupon, setCoupon] = useState("");
+  const [discount, setDiscount] = useState(0);
+
   useEffect(() => {
+    // if (!user || !choosedCourse) {
+    //   setPaymentUrl("/window.svg");
+    //   return;
+    // }
     apiFetch("api/courses")
       .then((response) => response.json())
       .then((data) => {
@@ -28,30 +37,50 @@ export default function CheckoutPage() {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     const storedCourses = localStorage.getItem("choosedCourses");
     if (storedCourses) {
-      setChoosedCourse(JSON.parse(storedCourses));
-    }
-  }, [setChoosedCourse]);
-
-  useEffect(() => {
-    if (!user || !choosedCourse) {
-      setPaymentUrl("/window.svg");
-      return;
-    }
-    let description = user.id + " dang ky khoa ";
-    if (choosedCourse.length > 0) {
-      let totalPrice = 0;
-      choosedCourse.forEach((course) => {
-        description += course.id + " ";
-        totalPrice += course.price;
+      const courses = JSON.parse(storedCourses);
+      setChoosedCourse(courses);
+      let curPrice = 0;
+      courses.forEach((course) => {
+        curPrice += course.price;
       });
-      setPrice(totalPrice);
+      setPrice(curPrice);
+
+      apiFetch("api/handle-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: storedCourses,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setIsLoading(false);
+          setPaymentUrl(data.qrCodeUrl);
+        });
     }
-    setPaymentUrl(
-      `https://img.vietqr.io/image/970422-0981952931-qr_only.png?amount=${price}&addInfo=${description}&accountName=HOANG HAI LONG`
-    );
-  }, [choosedCourse, user, price]);
+  }, []);
+
+  // useEffect(() => {
+  //   if (!user || !choosedCourse) {
+  //     setPaymentUrl("/window.svg");
+  //     return;
+  //   }
+  //   let description = user.id + " dang ky khoa ";
+  //   if (choosedCourse.length > 0) {
+  //     let totalPrice = 0;
+  //     choosedCourse.forEach((course) => {
+  //       description += course.id + " ";
+  //       totalPrice += course.price;
+  //     });
+  //     setPrice(totalPrice);
+  //   }
+  //   setPaymentUrl(
+  //     `https://img.vietqr.io/image/970422-0981952931-qr_only.png?amount=${price}&addInfo=${description}&accountName=HOANG HAI LONG`
+  //   );
+  // }, [choosedCourse, user, price]);
   const handleCheck = () => {
     setIsLoading(true);
     const timer = setTimeout(() => {
@@ -59,7 +88,6 @@ export default function CheckoutPage() {
     }, 1000);
 
     // Cleanup the timer if the component unmounts before the timeout
-
     () => clearTimeout(timer);
     if (choosedCourse) {
       apiFetch(`api/check-course/${choosedCourse[0].id}`, {
@@ -79,6 +107,42 @@ export default function CheckoutPage() {
     }
   };
 
+  const handleApplyCoupon = () => {
+    apiFetch("api/check-coupon", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: coupon,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          setDiscount(0);
+          toast({
+            title: "Lỗi!",
+            description: "Mã giảm giá không hợp lệ hoặc đã hết hạn!",
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setDiscount(parseInt(data));
+      });
+    if (coupon === "DISCOUNT10") {
+      setDiscount(price * 0.1);
+    } else {
+    }
+  };
+
+  const handleCopyAccount = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast({
+        title: "Copied!",
+        description: "Số tài khoản đã được lưu vào bộ nhớ tạm.",
+      });
+    });
+  };
+
   return (
     <>
       <SiteHeader />
@@ -87,25 +151,74 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Payment Form */}
           <div className="lg:col-span-2">
-            <Card className="p-6">
-              <h2 className="text-lg font-semibold mb-6">QR Code Payment</h2>
-              <div className="text-center">
-                <p className="mb-4">Quét mã dưới đây để thanh toán:</p>
-                <Image
-                  src={paymentUrl || "/placeholder.svg"}
-                  alt="Thanh toán qua QR code"
-                  width={200}
-                  height={200}
-                  className="mx-auto"
-                />
-                <p className="text-muted-foreground text-sm mt-4">
-                  Mã có hiệu lực trong 10 phút
-                </p>
+            <Card className="p-7">
+              <h2 className="text-2xl font-semibold mb-6">
+                Thanh toán với QR Code
+              </h2>
+              <div className="flex flex-col md:flex-row items-start justify-between">
+                <div className="w-full md:w-1/2 mb-6 md:mb-0 md:mr-6">
+                  <h3 className="text-lg font-semibold mb-4">
+                    Thông tin tài khoản
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        Tên tài khoản:
+                      </p>
+                      <p className="font-medium">HOANG HAI LONG</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        Ngân hàng:
+                      </p>
+                      <p className="font-medium">MB Bank</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        Số tài khoản:
+                      </p>
+                      <div className="flex items-center">
+                        <p className="font-medium mr-2">0981952931</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleCopyAccount("0981952931")}
+                        >
+                          Copy
+                        </Button>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Chi nhánh</p>
+                      <p className="font-medium">Hà Nội</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full md:w-1/3 relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg blur"></div>
+                  <div className="relative bg-white p-4 rounded-lg shadow-lg">
+                    <Image
+                      src={paymentUrl || "/placeholder.svg"}
+                      alt="Thanh toán qua QR code"
+                      width={200}
+                      height={200}
+                      className="mx-auto"
+                    />
+                    <p className="text-muted-foreground text-sm mt-4 text-center">
+                      QR code expires in{" "}
+                      <span className="font-semibold text-primary">
+                        10 minutes
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 text-center">
                 <Button
                   onClick={handleCheck}
-                  className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-2 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
                 >
-                  Confirm Payment
+                  Xác nhận thanh toán
                 </Button>
                 {error && (
                   <div className="text-red-500 mt-4 text-center">{error}</div>
@@ -128,12 +241,18 @@ export default function CheckoutPage() {
                       !choosedCourse.some((chosen) => chosen.id === course.id)
                   )
                   .map((course, index) => (
-                    <Link href={`course-introduce/${course.id}`}>
+                    <Link
+                      href={`course-introduce/${course.id}`}
+                      key={course.id}
+                    >
                       <Card key={index} className="relative overflow-hidden">
                         <Image
                           src={
                             course.imageUrl ||
                             "/placeholder.svg?height=200&width=300" ||
+                            "/placeholder.svg" ||
+                            "/placeholder.svg" ||
+                            "/placeholder.svg" ||
                             "/placeholder.svg" ||
                             "/placeholder.svg"
                           }
@@ -185,15 +304,28 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 ))}
-
+                <div className="mt-6">
+                  <h3 className="text-sm font-medium mb-2">Có mã giảm giá?</h3>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Nhập mã giảm giá"
+                      className="flex-grow"
+                      value={coupon}
+                      onChange={(e) => setCoupon(e.target.value)}
+                    />
+                    <Button variant="outline" onClick={handleApplyCoupon}>
+                      Dùng
+                    </Button>
+                  </div>
+                </div>
                 <div className="border-t border-border pt-4 mt-4">
                   <div className="flex justify-between text-muted-foreground mb-2">
                     <span>Giá gốc</span>
-                    <span>{price}</span>
+                    <span>${price.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground mb-2">
                     <span>Giảm giá</span>
-                    <span>0%</span>
+                    <span>${discount.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground mb-4">
                     <span>Thuế</span>
@@ -201,7 +333,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between text-lg font-semibold">
                     <span>Giá cuối</span>
-                    <span>{price}</span>
+                    <span>${(price - discount).toFixed(2)}</span>
                   </div>
                 </div>
               </div>

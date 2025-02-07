@@ -62,7 +62,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://www.longnihongo.com", "https://api.longnihongo.com", "https://admin.longnihongo.com")); // Change to your frontend URL
+        configuration.setAllowedOrigins(List.of("https://www.longnihongo.com", "https://api.longnihongo.com", "https://admin.longnihongo.com", "http://localhost:3000", "http://localhost:3001")); // Change to your frontend URL
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

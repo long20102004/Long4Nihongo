@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ThumbsUp,
   MessageCircle,
@@ -18,6 +18,9 @@ export function FlashCard({ flashcards }) {
   const currentCard = flashcards[currentIndex];
   const learned = flashcards.length - currentIndex - 1;
   const remaining = currentIndex;
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [flashcards]);
 
   const handlePrevious = () => {
     if (currentIndex > 0) {

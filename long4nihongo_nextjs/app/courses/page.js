@@ -31,7 +31,6 @@ export default function CourseJourney() {
   return (
     <div className="min-h-screen bg-background dark:from-slate-900 dark:to-slate-800 text-slate-900 dark:text-white">
       {isLoading && <LoadingOverlay></LoadingOverlay>}
-      <SubtleParticleBackground />
       <SiteHeader />
       <motion.h1
         className="text-4xl md:text-6xl font-bold text-center py-20"
