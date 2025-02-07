@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
+import { useEffect } from "react";
 export function Quiz({ questions }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
-
+  useEffect(() => {
+    setCurrentQuestion(0);
+  }, [questions]);
   const handleAnswer = (index) => {
     setSelectedAnswer(index);
     if (index === questions[currentQuestion].correctAnswer) {

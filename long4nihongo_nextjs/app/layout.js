@@ -1,30 +1,26 @@
 "use client";
 import "./globals.css";
+
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/lib/context/ThemeProvider";
 import { LessonsProvider } from "@/lib/context/lesson-provider";
 import { AuthProvider } from "@/lib/context/auth-context";
 import { CourseProvider } from "@/lib/context/course-provider";
-const inter = Inter({ subsets: ["latin"] });
 import { CourseCheckOutProvider } from "@/lib/context/course-checkout-content";
 import { usePathname } from "next/navigation";
-import { SessionProvider } from "next-auth/react";
+import SubtleParticleBackground from "@/components/ui/snow-effect";
+import { Toaster } from "@/components/ui/toaster";
+import { BugReportButton } from "@/components/BugReportButton";
+import { ParticleProvider, useParticles } from "@/lib/context/particle-context";
 
-// export const metadata = {
-//   description:
-//     "Dive into Japanese language and culture with Longnihongo. Start learning today!",
-//   icons: {
-//     icon: "/icon.png",
-//     shortcut: "/icon.png", // Optional shortcut icon
-//     apple: "/icon.png", // For Apple devices
-//   },
-// };
+const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({ children }) {
+function RootLayoutContent({ children }) {
+  const { isParticlesEnabled } = useParticles();
   const pathname = usePathname();
-  let pageTitle = "LongNihongo - Your Path to Japanese Mastery"; // default title
 
-  // Dynamically change title based on the pathname
+  let pageTitle = "LongNihongo - Your Path to Japanese Mastery";
+
   if (pathname === "/my-courses") {
     pageTitle = "My Courses";
   } else if (pathname === "/about") {
@@ -44,12 +40,15 @@ export default function RootLayout({ children }) {
         <title>{pageTitle}</title>
       </head>
       <body className={inter.className}>
+        {isParticlesEnabled && <SubtleParticleBackground />}
         <CourseProvider>
           <CourseCheckOutProvider>
             <AuthProvider>
               <LessonsProvider>
                 <ThemeProvider attribute="class" defaultTheme="light">
                   {children}
+                  <Toaster />
+                  <BugReportButton />
                 </ThemeProvider>
               </LessonsProvider>
             </AuthProvider>
@@ -57,5 +56,13 @@ export default function RootLayout({ children }) {
         </CourseProvider>
       </body>
     </html>
+  );
+}
+
+export default function RootLayout({ children }) {
+  return (
+    <ParticleProvider>
+      <RootLayoutContent>{children}</RootLayoutContent>
+    </ParticleProvider>
   );
 }

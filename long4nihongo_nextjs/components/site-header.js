@@ -6,8 +6,7 @@ import { Button } from "./ui/button";
 import { ThemeToggle } from "@/components/ui/toggle-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Mic } from "lucide-react";
-import Image from "next/image";
-
+import { useParticles } from "@/lib/context/particle-context";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +19,7 @@ import { User, BookOpen, ShoppingCart, Key, LogOut } from "lucide-react";
 import { AuthModal } from "@/components/auth-model";
 import LoginPage from "@/app/login/login";
 import SignUpPage from "@/app/signup/signup";
+import { Snowflake } from "lucide-react";
 
 export default function Header({
   onTriggerLogin = () => {},
@@ -27,6 +27,7 @@ export default function Header({
   callLoginFormFromOtherComponents = false,
 }) {
   const [isClient, setIsClient] = useState(false);
+  const { isParticlesEnabled, toggleParticles } = useParticles();
 
   const { user, logout, login } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -55,6 +56,7 @@ export default function Header({
           <Link href="/" className="text-3xl font-bold text-primary">
             ロン日本語
           </Link>
+          <div className="flex items-center space-x-4"></div>
           <div className="hidden md:flex items-center space-x-6">
             <Button
               variant="ghost"
@@ -174,6 +176,21 @@ export default function Header({
             <div className="flex justify-end p-4">
               <ThemeToggle />
             </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleParticles}
+              title={
+                isParticlesEnabled ? "Disable Particles" : "Enable Particles"
+              }
+              className="mr-2"
+            >
+              <Snowflake
+                className={
+                  isParticlesEnabled ? "text-blue-500" : "text-gray-500"
+                }
+              />
+            </Button>
           </div>
         </nav>
       </div>
