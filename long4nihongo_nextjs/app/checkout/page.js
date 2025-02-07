@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LoadingOverlay from "@/components/ui/LoadingOverLay";
 import { toast } from "@/components/ui/use-toast";
+import { ArrowLeft } from "lucide-react";
+
 export default function CheckoutPage() {
   const [paymentUrl, setPaymentUrl] = useState("/window.svg");
   const { choosedCourse, setChoosedCourse } = useChoosedCourse();
@@ -63,24 +65,6 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (!user || !choosedCourse) {
-  //     setPaymentUrl("/window.svg");
-  //     return;
-  //   }
-  //   let description = user.id + " dang ky khoa ";
-  //   if (choosedCourse.length > 0) {
-  //     let totalPrice = 0;
-  //     choosedCourse.forEach((course) => {
-  //       description += course.id + " ";
-  //       totalPrice += course.price;
-  //     });
-  //     setPrice(totalPrice);
-  //   }
-  //   setPaymentUrl(
-  //     `https://img.vietqr.io/image/970422-0981952931-qr_only.png?amount=${price}&addInfo=${description}&accountName=HOANG HAI LONG`
-  //   );
-  // }, [choosedCourse, user, price]);
   const handleCheck = () => {
     setIsLoading(true);
     const timer = setTimeout(() => {
@@ -106,7 +90,9 @@ export default function CheckoutPage() {
         });
     }
   };
-
+  const handleBack = () => {
+    router.back();
+  };
   const handleApplyCoupon = () => {
     apiFetch("api/check-coupon", {
       method: "POST",
@@ -143,6 +129,28 @@ export default function CheckoutPage() {
     });
   };
 
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-center max-w-md w-full">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
+            Chưa đăng nhập!
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            Hãy đăng nhập để xem nội dung này!
+          </p>
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-center"
+            onClick={handleBack}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Quay lại
+          </Button>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <SiteHeader />

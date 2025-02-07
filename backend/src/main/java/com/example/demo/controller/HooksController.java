@@ -33,16 +33,29 @@ public class HooksController {
         Integer moneyReceived = (Integer) payload.get("transferAmount");
         System.out.println(transactionCode + " " + moneyReceived);
         Transaction transaction = paymentService.findTransactionById(transactionCode);
-
         if (transaction == null) {
             return ResponseEntity.badRequest().body("Transaction timed out!");
         }
-        System.out.println("found transaction");
+        Receipt receipt = new Receipt();
+        User user = transaction.getUser();
+        StringBuilder courseName = new StringBuilder();
+        for (int courseId : transaction.getCoursesID()) {
+            Course course = courseService.findById(courseId);
+            courseName.append(" ").append(course.getName());
+            receipt.setCourseId(courseId);
+        }
+        receipt.setUserId(user.getId());
+        receipt.setCourseName(courseName.toString().trim());
+        receipt.setUsername(user.getUsername());
+        receipt.setDate(LocalDateTime.now());
+        receipt.setAmountPurchased(moneyReceived);
+
+        paymentService.saveReceipt(receipt);
         if (moneyReceived == transaction.getMoney()) {
-            User user = transaction.getUser();
+
             Set<Course> courseList = user.getCourseSet();
             List<Course> courses = new ArrayList<>();
-            for (int x : transaction.getCoursesID()){
+            for (int x : transaction.getCoursesID()) {
                 System.out.println(x);
                 courses.add(courseService.findById(x));
             }

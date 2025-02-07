@@ -91,10 +91,10 @@ export default function CoursePage({ params: paramsPromise }) {
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
         <div className="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-center max-w-md w-full">
           <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-            Login Required
+            Chưa đăng nhập!
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Please log in to continue accessing this content.
+            Hãy đăng nhập để xem nội dung này
           </p>
           <Button
             variant="outline"
@@ -102,7 +102,7 @@ export default function CoursePage({ params: paramsPromise }) {
             onClick={handleBack}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Go Back
+            Quay lại
           </Button>
         </div>
       </div>
