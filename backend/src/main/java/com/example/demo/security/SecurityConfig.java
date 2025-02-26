@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -45,16 +46,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "oauth2/**", "/login/**", "/register", "/courses/**", "/valid", "/course/**", "/api/**", "/files/**", "/hooks/sepay-payment", "/api/check-course/**").permitAll()
+                        .requestMatchers("/", "oauth2/**", "/login/**", "/register", "/courses/**", "/valid", "/course/**", "/api/**", "/files/**", "/hooks/sepay-payment", "/api/check-course/**", "api/register", "auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionFixation().migrateSession()
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
-                .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable);
+                .cors(Customizer.withDefaults());
 
         return httpSecurity.build();
     }
@@ -62,6 +63,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(List.of("*"));
+
         configuration.setAllowedOrigins(List.of("https://www.longnihongo.com", "https://api.longnihongo.com", "https://admin.longnihongo.com", "http://localhost:3000", "http://localhost:3001")); // Change to your frontend URL
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
@@ -76,28 +79,28 @@ public class SecurityConfig {
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
     }
-    @Bean
-    public AuthenticationSuccessHandler successHandler() {
-        return new SimpleUrlAuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-                String id = oauth2User.getAttribute("id");
-                if (id == null) id = oauth2User.getAttribute("email");
-                User user = userService.findByUserName(id);
-                if (user == null) {
-                    user = new User();
-                    user.setUsername(id);
-                    userService.save(user);
-                }
-            }
-
-            @Override
-            protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                // Do nothing to prevent redirect
-            }
-        };
-    }
+//    @Bean
+//    public AuthenticationSuccessHandler successHandler() {
+//        return new SimpleUrlAuthenticationSuccessHandler() {
+//            @Override
+//            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+//                OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+//                String id = oauth2User.getAttribute("id");
+//                if (id == null) id = oauth2User.getAttribute("email");
+//                User user = userService.findByUserName(id);
+//                if (user == null) {
+//                    user = new User();
+//                    user.setUsername(id);
+//                    userService.save(user);
+//                }
+//            }
+//
+//            @Override
+//            protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+//                // Do nothing to prevent redirect
+//            }
+//        };
+//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

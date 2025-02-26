@@ -7,7 +7,7 @@ export default function Login({ setIsLoggedIn }) {
   const [password, setPassword] = useState("");
   const login = async (username, password) => {
     console.log("sending");
-    apiFetch("api/login", {
+    apiFetch("auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),

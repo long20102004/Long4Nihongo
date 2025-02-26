@@ -11,7 +11,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-
+import GoogleSignIn from "@/components/google-signin";
 export default function LoginPage({ onSignUpClick, onClose }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -110,15 +110,7 @@ export default function LoginPage({ onSignUpClick, onClose }) {
             </span>
           </div>
         </div>
-        <Button
-          variant="outline"
-          className="w-full border-input text-foreground hover:bg-accent transition-all duration-300"
-          onClick={() => {
-            /* Implement Google Sign In */
-          }}
-        >
-          Google
-        </Button>
+        <GoogleSignIn />
       </CardContent>
       <CardFooter className="text-center">
         <p className="text-muted-foreground text-sm">
