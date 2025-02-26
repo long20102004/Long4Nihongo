@@ -9,7 +9,7 @@
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {
 //        registry.addMapping("/**")
-//                .allowedOrigins("https://www.longnihongo.com", "https://api.longnihongo.com", "https://admin.longnihongo.com")
+//                .allowedOriginPatterns("*")
 //                .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
 //                .allowedHeaders("*")
 //                .allowedMethods("*")

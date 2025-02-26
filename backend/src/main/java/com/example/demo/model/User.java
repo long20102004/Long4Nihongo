@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.dto.UserDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -41,6 +42,12 @@ public class User implements UserDetails {
     inverseJoinColumns = @JoinColumn(name = "courses_id"))
     @Where(clause = "is_deleted = 0")
     private Set<Course> courseSet;
+    public User(UserDTO userDTO){
+        this.name = userDTO.getName();
+        this.username = userDTO.getUsername();
+        this.password = userDTO.getPassword();
+        this.role = userDTO.getRole();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.role));

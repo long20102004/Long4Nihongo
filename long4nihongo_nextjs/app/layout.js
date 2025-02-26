@@ -12,7 +12,7 @@ import SubtleParticleBackground from "@/components/ui/snow-effect";
 import { Toaster } from "@/components/ui/toaster";
 import { BugReportButton } from "@/components/BugReportButton";
 import { ParticleProvider, useParticles } from "@/lib/context/particle-context";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const inter = Inter({ subsets: ["latin"] });
 
 function RootLayoutContent({ children }) {
@@ -41,19 +41,23 @@ function RootLayoutContent({ children }) {
       </head>
       <body className={inter.className}>
         {isParticlesEnabled && <SubtleParticleBackground />}
-        <CourseProvider>
-          <CourseCheckOutProvider>
-            <AuthProvider>
-              <LessonsProvider>
-                <ThemeProvider attribute="class" defaultTheme="light">
-                  {children}
-                  <Toaster />
-                  <BugReportButton />
-                </ThemeProvider>
-              </LessonsProvider>
-            </AuthProvider>
-          </CourseCheckOutProvider>
-        </CourseProvider>
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+        >
+          <CourseProvider>
+            <CourseCheckOutProvider>
+              <AuthProvider>
+                <LessonsProvider>
+                  <ThemeProvider attribute="class" defaultTheme="light">
+                    {children}
+                    <Toaster />
+                    <BugReportButton />
+                  </ThemeProvider>
+                </LessonsProvider>
+              </AuthProvider>
+            </CourseCheckOutProvider>
+          </CourseProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

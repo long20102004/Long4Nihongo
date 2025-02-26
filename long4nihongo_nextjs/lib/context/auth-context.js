@@ -11,12 +11,11 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { setMyCourse } = useCourses();
 
   useEffect(() => {
     const checkLoggedIn = async () => {
       try {
-        const response = await apiFetch("api/user", {
+        const response = await apiFetch("auth/user", {
           method: "POST",
         });
         if (response.ok) {
@@ -28,6 +27,7 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         localStorage.setItem("active", 0);
         localStorage.setItem("crs", null);
+        setUser(null);
         console.error("Failed to fetch user data", error);
       } finally {
         setLoading(false);
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    const response = await apiFetch("api/login", {
+    const response = await apiFetch("auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -51,9 +51,12 @@ export const AuthProvider = ({ children }) => {
       throw new Error("Login failed");
     }
   };
-
+  const oauthLogin = (userData) => {
+    setUser(userData);
+    localStorage.setItem("active", 1);
+  };
   const signup = async (name, username, password) => {
-    const response = await apiFetch("api/register", {
+    const response = await apiFetch("auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, username, password }),
@@ -68,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   };
   const logout = async () => {
     try {
-      await apiFetch("api/logout", {
+      await apiFetch("auth/logout", {
         method: "POST",
       });
       localStorage.setItem("active", 0);
@@ -81,7 +84,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading, signup }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, loading, signup, oauthLogin }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -49,6 +49,13 @@ export default function Header({
       setTriggerLogin(false);
     }
   }, [isLoginModalOpen]);
+
+  useEffect(() => {
+    if (user != null) {
+      setIsLoginModalOpen(false);
+      setIsSignUpModalOpen(false);
+    }
+  }, [user]);
   return (
     <header className="border-b border-slate-200 dark:border-slate-700">
       <div className="container mx-auto px-4 py-4 bg-background dark:bg-background">

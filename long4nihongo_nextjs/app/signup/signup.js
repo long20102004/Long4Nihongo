@@ -11,6 +11,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import GoogleSignIn from "@/components/google-signin";
 
 export default function SignUpPage({ onLoginClick, onClose }) {
   const [error, setError] = useState("");
@@ -136,15 +137,7 @@ export default function SignUpPage({ onLoginClick, onClose }) {
             </span>
           </div>
         </div>
-        <Button
-          variant="outline"
-          className="w-full border-input text-foreground hover:bg-accent transition-all duration-300"
-          onClick={() => {
-            /* Implement Google Sign Up */
-          }}
-        >
-          Google
-        </Button>
+        <GoogleSignIn />
       </CardContent>
       <CardFooter className="text-center">
         <p className="text-muted-foreground text-sm">
