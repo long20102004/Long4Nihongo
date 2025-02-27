@@ -12,7 +12,7 @@ import Header from "../components/Header";
 import UserManagement from "../components/UserManagement";
 import Login from "../components/Login";
 import LoadingSpinner from "../components/LoadingSpinner";
-
+import { apiFetch } from "@/lib/api-fetch";
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentView, setCurrentView] = useState("courses");
@@ -23,8 +23,6 @@ export default function Home() {
     selectedCourse,
     selectedLesson,
     selectedSection,
-    editMode,
-    editData,
     newCourse,
     newLesson,
     newSection,
@@ -32,7 +30,6 @@ export default function Home() {
     setSelectedLesson,
     setSelectedSection,
     handleEdit,
-    handleSave,
     handleDelete,
     handleAddCourse,
     handleAddLesson,
@@ -42,9 +39,18 @@ export default function Home() {
     setNewCourse,
     setNewLesson,
     setNewSection,
-    setEditMode,
     fetchCourses,
   } = useCourseManagement();
+
+  useEffect(() => {
+    apiFetch("auth/user", {
+      method: "POST",
+    }).then((data) => {
+      if (!data.ok) {
+        localStorage.setItem("active", 0);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const checkLoginStatus = () => {
