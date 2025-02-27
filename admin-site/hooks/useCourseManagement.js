@@ -182,7 +182,7 @@ export function useCourseManagement() {
           },
           body: JSON.stringify(item),
         });
-        setNewCourse(null);
+        // setNewCourse(null);
         break;
       case "lesson":
         if (item.name.trim() === "") {
@@ -207,7 +207,7 @@ export function useCourseManagement() {
           },
           body: JSON.stringify(item),
         });
-        setNewLesson(null);
+        // setNewLesson(null);
         break;
       case "section":
         if (item.name.trim() === "") {
@@ -242,10 +242,10 @@ export function useCourseManagement() {
           },
           body: JSON.stringify(item),
         });
-        setNewSection(null);
+        // setNewSection(null);
         break;
     }
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleSectionContentEdit = (type, content) => {

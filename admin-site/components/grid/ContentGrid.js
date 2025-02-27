@@ -207,7 +207,7 @@ export default function ContentGrid({
           >
             <CardContent className="p-0">
               <div className="relative">
-                {content.videoUrl}
+                {content?.videoUrl}
                 <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                     <DialogTrigger asChild>
@@ -280,7 +280,7 @@ export default function ContentGrid({
               </div>
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  {getFileIcon(content.fileType)}
+                  {getFileIcon(content?.fileType)}
                   <h3 className="font-semibold text-lg text-white">
                     Video Url: {content}
                   </h3>

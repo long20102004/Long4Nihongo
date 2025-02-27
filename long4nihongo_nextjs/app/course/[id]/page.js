@@ -14,6 +14,7 @@ import LoadingOverlay from "@/components/ui/LoadingOverLay";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import CustomVideoPlayer from "@/components/custom-video-player";
 
 export default function CoursePage({ params: paramsPromise }) {
   const { user } = useAuth();
@@ -39,6 +40,7 @@ export default function CoursePage({ params: paramsPromise }) {
       (contentType === "video" && video === null)
     );
   };
+
   useEffect(() => {
     setVideo(dataList.videoUrl);
     const newFlashCards = [];
@@ -63,20 +65,7 @@ export default function CoursePage({ params: paramsPromise }) {
     setFlashCards(newFlashCards);
     setWords(newWords);
     setQuestions(newQuestions);
-  }, [params.id, user, dataList]);
-
-  // useEffect(() => {
-  //   apiFetch(`api/check-course/${params.id}/`, {
-  //     method: "POST",
-  //   }).then((response) => {
-  //     if (response.ok) {
-  //       setHaveCourse(true);
-  //       console.log("have this course");
-  //     } else {
-  //       console.log("not have this course");
-  //     }
-  //   });
-  // }, []);
+  }, [dataList]);
 
   useEffect(() => {
     apiFetch(`api/course/${params.id}/lessons`)
@@ -84,7 +73,7 @@ export default function CoursePage({ params: paramsPromise }) {
       .then((data) => {
         setLessons(data);
       });
-  }, [params.id, user, dataList]);
+  }, [params.id]);
 
   if (!user) {
     return (
@@ -108,6 +97,7 @@ export default function CoursePage({ params: paramsPromise }) {
       </div>
     );
   }
+
   return (
     <>
       <SiteHeader></SiteHeader>
@@ -150,10 +140,8 @@ export default function CoursePage({ params: paramsPromise }) {
                   ) : (
                     <>
                       {contentType === "video" && (
-                        <div className="w-full h-full bg-white dark:bg-slate-700 rounded-lg flex items-center justify-center">
-                          <video controls key={video} className="w-full h-full">
-                            <source type="video/mp4" src={video} />
-                          </video>
+                        <div className="w-full max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg">
+                          <CustomVideoPlayer src={video} />
                         </div>
                       )}
 
