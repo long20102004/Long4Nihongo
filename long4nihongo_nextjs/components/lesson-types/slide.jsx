@@ -1,16 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import {
-  Maximize,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  ZoomIn,
-  ZoomOut,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
 
 export function Slide({ slides }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -110,6 +102,31 @@ export function Slide({ slides }) {
     <div className="relative w-full h-full">
       {/* Regular slide view */}
       <div className="relative w-full h-full flex flex-col items-center justify-center bg-white dark:bg-slate-800 rounded-lg p-4">
+        {/* Fixed navigation buttons - positioned on the parent container */}
+        {slides.length > 1 && (
+          <>
+            <Button
+              variant="secondary"
+              size="icon"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-slate-800/80 hover:bg-white dark:bg-slate-500/80 dark:hover:bg-slate-800"
+              onClick={goToPrevSlide}
+              disabled={currentIndex === 0}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            <Button
+              variant="secondary"
+              size="icon"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-slate-800/80 hover:bg-white dark:bg-slate-500/80 dark:hover:bg-slate-800"
+              onClick={goToNextSlide}
+              disabled={currentIndex === slides.length - 1}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </>
+        )}
+
         <div className="relative max-w-full max-h-full">
           <img
             src={currentSlide.imgUrl || "/placeholder.svg"}
@@ -124,31 +141,6 @@ export function Slide({ slides }) {
           >
             <Maximize className="h-4 w-4" />
           </Button> */}
-
-          {/* Navigation buttons */}
-          {slides.length > 1 && (
-            <>
-              <Button
-                variant="secondary"
-                size="icon"
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-800"
-                onClick={goToPrevSlide}
-                disabled={currentIndex === 0}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-
-              <Button
-                variant="secondary"
-                size="icon"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-800"
-                onClick={goToNextSlide}
-                disabled={currentIndex === slides.length - 1}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </>
-          )}
         </div>
 
         {currentSlide.caption && (
