@@ -77,8 +77,8 @@ export function FlashCard({ flashcards }) {
                 <Image
                   src={currentCard.imgUrl || null}
                   alt="Illustration"
-                  width={360} // Adjust the width as needed
-                  height={360} // Adjust the height as needed
+                  width={400} // Adjust the width as needed
+                  height={600} // Adjust the height as needed
                   className="object-contain rounded-lg"
                   priority
                 />

@@ -1,6 +1,7 @@
 package com.example.demo.service.data_service;
 
 import com.example.demo.model.FlashCard;
+import com.example.demo.model.Question;
 import com.example.demo.repository.FlashCardRepository;
 import lombok.AllArgsConstructor;
 import org.bson.types.ObjectId;
@@ -18,19 +19,23 @@ import java.util.List;
 public class FlashCardService {
     private FlashCardRepository flashCardRepository;
     private MongoTemplate mongoTemplate;
+
     public void deleteById(String id) {
         Query query = new Query(Criteria.where("_id").is(id));
         Update update = new Update().set("isDeleted", 1);
         mongoTemplate.updateFirst(query, update, FlashCard.class);
     }
+
     public List<FlashCard> findBySectionId(String sectionId) {
         List<FlashCard> flashCards = flashCardRepository.findAllByLessonSectionId(sectionId);
         flashCards.sort(Comparator.comparingInt(FlashCard::getOrder));
         return flashCards;
     }
-    public List<FlashCard> findAll(){
+
+    public List<FlashCard> findAll() {
         return flashCardRepository.findAll();
     }
+
     public void save(FlashCard flashCard) {
         if (flashCard.getOrder() == null) {
             long maxOrder = flashCardRepository.count();
@@ -38,7 +43,19 @@ public class FlashCardService {
         }
         flashCardRepository.save(flashCard);
     }
-    public FlashCard findById(String id){
+
+    public void deleteAll() {
+        Update update = new Update().set("isDeleted", 1);
+        mongoTemplate.updateMulti(new Query(), update, FlashCard.class);
+    }
+
+    public FlashCard findById(String id) {
         return flashCardRepository.findById(id).get();
+    }
+
+    public void deleteAllBySectionId(String sectionId) {
+        Query query = new Query(Criteria.where("sectionId").is(sectionId));
+        Update update = new Update().set("isDeleted", 1);
+        mongoTemplate.updateMulti(query, update, FlashCard.class);
     }
 }

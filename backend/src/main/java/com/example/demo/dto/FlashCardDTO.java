@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FlashCardDTO {
+    private String imageReference;
     private String id;
     private String sectionId;
     private String word;

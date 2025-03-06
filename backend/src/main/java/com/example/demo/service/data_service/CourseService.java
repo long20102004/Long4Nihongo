@@ -16,6 +16,7 @@ import java.util.Set;
 public class CourseService {
     private CourseRepository courseRepository;
     private LessonService lessonService;
+
     public Set<User> findUsersByCourseId(int courseId) {
         return courseRepository.findUsersByCourseId(courseId);
     }
@@ -28,6 +29,10 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
+    /**
+     * This method is used to delete a course base on its id
+     * @param courseId the id of the course need to be deleted
+     */
     public void deleteById(int courseId) {
         for (Lesson lesson : lessonService.findAll()){
             lessonService.deleteById(lesson.getId());

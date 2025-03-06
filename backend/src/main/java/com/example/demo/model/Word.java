@@ -18,9 +18,9 @@ public class Word{
     private String meaning;
     private int isDeleted;
     public Word(WordDTO wordDTO) {
-        this.sectionId = wordDTO.getSectionId();
-        this.hiragana = wordDTO.getHiragana();
-        this.kanji = wordDTO.getKanji();
-        this.meaning = wordDTO.getMeaning();
+        this.sectionId = wordDTO.getSectionId().trim();
+        this.hiragana = wordDTO.getHiragana().trim();
+        this.kanji = wordDTO.getKanji().trim();
+        this.meaning = wordDTO.getMeaning().trim();
     }
 }

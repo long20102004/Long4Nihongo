@@ -1,5 +1,6 @@
 package com.example.demo.service.data_service;
 
+import com.example.demo.model.FlashCard;
 import com.example.demo.model.Question;
 import com.example.demo.repository.QuestionRepository;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,10 @@ public class QuestionService {
         questions.sort(Comparator.comparingInt(Question::getOrder));
         return questions;
     }
-
+    public void deleteAll() {
+        Update update = new Update().set("isDeleted", 1);
+        mongoTemplate.updateMulti(new Query(), update, FlashCard.class);
+    }
     public List<Question> findAll() {
         return questionRepository.findAll();
     }
@@ -46,4 +50,9 @@ public class QuestionService {
         return questionRepository.findById(id).orElse(null);
     }
 
+    public void deleteAllBySectionId(String sectionId) {
+        Query query = new Query(Criteria.where("sectionId").is(sectionId));
+        Update update = new Update().set("isDeleted", 1);
+        mongoTemplate.updateMulti(query, update, Question.class);
+    }
 }

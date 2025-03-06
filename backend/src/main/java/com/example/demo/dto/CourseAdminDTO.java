@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class CourseAdminDTO extends CourseDTO {
-    private List<LessonAdminDTO> lessons;
+    private List<LessonDTO> lessons;
     public CourseAdminDTO(Course course){
         super(course);
     }

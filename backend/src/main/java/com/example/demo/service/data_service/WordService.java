@@ -1,6 +1,7 @@
 package com.example.demo.service.data_service;
 
 import com.example.demo.model.FlashCard;
+import com.example.demo.model.Question;
 import com.example.demo.model.Word;
 import com.example.demo.repository.WordRepository;
 import lombok.AllArgsConstructor;
@@ -33,10 +34,18 @@ public class WordService {
     public Word save(Word word) {
         return wordRepository.save(word);
     }
-    public Word findById(String id){
+
+    public Word findById(String id) {
         return wordRepository.findById(id).get();
     }
+
     public List<Word> findBySectionId(String sectionId) {
         return wordRepository.findAllByLessonSectionId(sectionId);
+    }
+
+    public void deleteAllBySectionId(String sectionId) {
+        Query query = new Query(Criteria.where("sectionId").is(sectionId));
+        Update update = new Update().set("isDeleted", 1);
+        mongoTemplate.updateMulti(query, update, Word.class);
     }
 }
