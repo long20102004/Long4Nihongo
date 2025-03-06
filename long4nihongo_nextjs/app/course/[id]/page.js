@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import CustomVideoPlayer from "@/components/custom-video-player";
+import { WordList } from "@/components/lesson-types/word-list";
+import { Slide } from "@/components/lesson-types/slide";
 
 export default function CoursePage({ params: paramsPromise }) {
   const { user } = useAuth();
@@ -27,46 +29,14 @@ export default function CoursePage({ params: paramsPromise }) {
   const [questions, setQuestions] = useState([]);
   const [video, setVideo] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [unavailbleContent, setUnavailbleContent] = useState([]);
+  const [slides, setSlides] = useState([]);
+  const typeList = ["video", "flashcard", "quiz", "word", "slide"];
   const router = useRouter();
 
   const handleBack = () => {
     router.back();
   };
-
-  const isContentEmpty = () => {
-    return (
-      (contentType === "flashcard" && flashCards.length === 0) ||
-      (contentType === "quiz" && questions.length === 0) ||
-      (contentType === "video" && video === null)
-    );
-  };
-
-  useEffect(() => {
-    setVideo(dataList.videoUrl);
-    const newFlashCards = [];
-    const newWords = [];
-    const newQuestions = [];
-    dataList.flashCards != null &&
-      dataList.flashCards.forEach((data) => {
-        newFlashCards.push(
-          new FlashCardd(data.word, data.meaning, data.example, data.imgUrl)
-        );
-      });
-    dataList.words != null &&
-      dataList.words.forEach((data) => {
-        newWords.push(new Word(data.hiragana, data.kanji, data.meaning));
-      });
-    dataList.questions != null &&
-      dataList.questions.forEach((data) => {
-        newQuestions.push(
-          new Question(data.question, data.answers, data.correctAnswer)
-        );
-      });
-    setFlashCards(newFlashCards);
-    setWords(newWords);
-    setQuestions(newQuestions);
-  }, [dataList]);
-
   useEffect(() => {
     apiFetch(`api/course/${params.id}/lessons`)
       .then((response) => response.json())
@@ -74,6 +44,90 @@ export default function CoursePage({ params: paramsPromise }) {
         setLessons(data);
       });
   }, [params.id]);
+  const isContentEmpty = () => {
+    return (
+      (contentType === "flashcard" && flashCards.length === 0) ||
+      (contentType === "quiz" && questions.length === 0) ||
+      (contentType === "video" && video === null) ||
+      (contentType === "word" && words.length === 0)
+    );
+  };
+
+  useEffect(() => {
+    // Check if dataList exists before accessing its properties
+    if (!dataList) {
+      console.log("Data list is not loaded yet");
+      return; // Exit early if dataList is not loaded
+    }
+    setUnavailbleContent([]);
+
+    setVideo(dataList.videoUrl);
+
+    if (!dataList.videoUrl) {
+      setUnavailbleContent((previous) => [...previous, "video"]);
+    }
+
+    const newFlashCards = [];
+    const newWords = [];
+    const newQuestions = [];
+    const newSlides = [];
+
+    // Add null checks before accessing length property
+    if (dataList.flashCards && dataList.flashCards.length > 0) {
+      dataList.flashCards.forEach((data) => {
+        if ((data.word === null || data.word === "") && data.imgUrl != "") {
+          newSlides.push(data);
+        } else if (data.imgUrl !== "" && data.word != "") {
+          newFlashCards.push(
+            new FlashCardd(data.word, data.meaning, data.example, data.imgUrl)
+          );
+        }
+      });
+    }
+
+    if (dataList.words && dataList.words.length > 0) {
+      dataList.words.forEach((data) => {
+        newWords.push(new Word(data.hiragana, data.kanji, data.meaning));
+      });
+    }
+
+    if (dataList.questions && dataList.questions.length > 0) {
+      dataList.questions.forEach((data) => {
+        newQuestions.push(
+          new Question(data.question, data.answers, data.correctAnswer)
+        );
+      });
+    }
+    if (newFlashCards.length === 0) {
+      setUnavailbleContent((previous) => [...previous, "flashcard"]);
+    }
+
+    if (newWords.length === 0) {
+      setUnavailbleContent((previous) => [...previous, "word"]);
+    }
+
+    if (newQuestions.length === 0) {
+      setUnavailbleContent((previous) => [...previous, "quiz"]);
+    }
+
+    if (newSlides.length === 0) {
+      setUnavailbleContent((previous) => [...previous, "slide"]);
+    }
+
+    setFlashCards(newFlashCards);
+    setWords(newWords);
+    setQuestions(newQuestions);
+    setSlides(newSlides);
+    if (!unavailbleContent.includes("video")) {
+      setContentType("video");
+    } else if (!unavailbleContent.includes("flashcard")) {
+      setContentType("flashcard");
+    } else if (!unavailbleContent.includes("quiz")) {
+      setContentType("quiz");
+    } else {
+      setContentType("word");
+    }
+  }, [dataList]);
 
   if (!user) {
     return (
@@ -125,6 +179,7 @@ export default function CoursePage({ params: paramsPromise }) {
             <div className="col-span-9">
               <div className="rounded-xl bg-background dark:bg-slate-800/50 backdrop-blur p-6 border border-slate-200 dark:border-slate-700">
                 <ContentTypeSwitcher
+                  unavailbleContent={unavailbleContent}
                   activeType={contentType}
                   onChange={setContentType}
                 />
@@ -150,6 +205,8 @@ export default function CoursePage({ params: paramsPromise }) {
                       )}
 
                       {contentType === "quiz" && <Quiz questions={questions} />}
+                      {contentType === "word" && <WordList words={words} />}
+                      {contentType === "slide" && <Slide slides={slides} />}
                     </>
                   )}
                 </div>

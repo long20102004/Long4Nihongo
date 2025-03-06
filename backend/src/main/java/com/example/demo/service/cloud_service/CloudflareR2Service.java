@@ -24,21 +24,8 @@ public class CloudflareR2Service {
                 .key(key)
                 .build(), Paths.get(filePath));
     }
-//    public URL generateSignedUrl(String fileName, long expirationTimeInMinutes) {
-//        // Set expiration time for the signed URL
-//        Date expiration = new Date();
-//        long expTimeMillis = System.currentTimeMillis();
-//        expTimeMillis += expirationTimeInMinutes * 60 * 1000; // Convert minutes to milliseconds
-//        expiration.setTime(expTimeMillis);
-//
-//        // Create a signed URL request
-//        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, fileName)
-//                .withMethod(com.amazonaws.HttpMethod.GET)
-//                .withExpiration(expiration);
-//
-//        // Generate and return the signed URL
-//        return s3Client.generatePresignedUrl(generatePresignedUrlRequest);
-//    }
+
+
     public S3Object downloadFile(String bucketName, String key) {
         return convertToS3Object(s3Client.getObject(GetObjectRequest.builder()
                 .bucket(bucketName)

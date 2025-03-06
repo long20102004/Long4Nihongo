@@ -23,8 +23,8 @@ public class Question{
     private int isDeleted;
     private Integer order;
     public Question(QuestionDTO questionDTO) {
-        this.sectionId = questionDTO.getSectionId();
-        this.question = questionDTO.getQuestion();
+        this.sectionId = questionDTO.getSectionId().trim();
+        this.question = questionDTO.getQuestion().trim();
         this.answers = questionDTO.getAnswers();
         this.correctAnswer = questionDTO.getCorrectAnswer();
     }

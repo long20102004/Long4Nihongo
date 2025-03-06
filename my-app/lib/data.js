@@ -1,0 +1,262 @@
+export const courses = [
+  {
+    id: "1",
+    title: "Web Development",
+    description: "Learn the fundamentals of web development",
+    thumbnail: "/placeholder.svg?height=200&width=400",
+    parts: [
+      {
+        id: "part-1",
+        title: "Introduction to Web Development",
+        description: "Learn the basics of HTML, CSS, and JavaScript",
+        lessons: [
+          {
+            id: "lesson-1",
+            title: "Introduction to HTML",
+            description: "Learn the basics of HTML",
+            video: {
+              url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+              title: "Introduction to HTML",
+              description: "Learn the basics of HTML",
+              duration: 15,
+            },
+            flashcards: 10,
+            questions: 5,
+            completionRate: 85,
+          },
+          {
+            id: "lesson-2",
+            title: "HTML Elements",
+            description: "Learn about different HTML elements",
+            video: null,
+            flashcards: 0,
+            questions: 0,
+            completionRate: 72,
+          },
+        ],
+        totalDuration: 30,
+        completionRate: 78,
+      },
+    ],
+    totalLessons: 2,
+    totalDuration: 30,
+    enrollments: 1245,
+    status: "Published",
+    lastUpdated: "2023-05-07",
+  },
+  // Add more courses here...
+];
+
+// Sample analytics data
+export const analytics = {
+  totalUsers: 5000,
+  newUsers: {
+    lastMonth: 250,
+    lastWeek: 75,
+  },
+  completionRate: 68,
+  previousCompletionRate: 65,
+  monthlyGrowth: [
+    { name: "Jan", users: 2100, courses: 15 },
+    { name: "Feb", users: 2300, courses: 17 },
+    { name: "Mar", users: 2500, courses: 18 },
+    { name: "Apr", users: 2700, courses: 20 },
+    { name: "May", users: 3000, courses: 22 },
+    { name: "Jun", users: 3300, courses: 25 },
+    { name: "Jul", users: 3700, courses: 28 },
+    { name: "Aug", users: 4100, courses: 30 },
+    { name: "Sep", users: 4400, courses: 32 },
+    { name: "Oct", users: 4700, courses: 35 },
+    { name: "Nov", users: 4900, courses: 38 },
+    { name: "Dec", users: 5000, courses: 40 },
+  ],
+  userActivity: [
+    { date: "2023-05-01", value: 1200 },
+    { date: "2023-05-02", value: 1300 },
+    { date: "2023-05-03", value: 1400 },
+    { date: "2023-05-04", value: 1350 },
+    { date: "2023-05-05", value: 1500 },
+    { date: "2023-05-06", value: 1600 },
+    { date: "2023-05-07", value: 1700 },
+  ],
+  topCourses: [
+    { name: "Web Development", value: 1245 },
+    { name: "React Basics", value: 876 },
+    { name: "Python Programming", value: 654 },
+    { name: "Data Science", value: 543 },
+    { name: "Machine Learning", value: 432 },
+  ],
+  courseCompletionRates: [
+    { name: "Web Development", value: 78 },
+    { name: "React Basics", value: 72 },
+    { name: "Python Programming", value: 65 },
+    { name: "Data Science", value: 58 },
+    { name: "Machine Learning", value: 52 },
+  ],
+  userEngagement: [
+    { date: "2023-05-01", value: 45 },
+    { date: "2023-05-02", value: 50 },
+    { date: "2023-05-03", value: 55 },
+    { date: "2023-05-04", value: 48 },
+    { date: "2023-05-05", value: 52 },
+    { date: "2023-05-06", value: 58 },
+    { date: "2023-05-07", value: 60 },
+  ],
+  recentActivities: [
+    {
+      type: "enrollment",
+      user: "John Doe",
+      action: "enrolled in Web Development",
+      timestamp: "2023-05-07T10:30:00Z",
+    },
+    {
+      type: "completion",
+      user: "Jane Smith",
+      action: "completed React Basics",
+      timestamp: "2023-05-07T09:15:00Z",
+    },
+    {
+      type: "content",
+      user: "Mike Johnson",
+      action: "added a new lesson to Python Programming",
+      timestamp: "2023-05-06T16:45:00Z",
+    },
+    {
+      type: "rating",
+      user: "Emily Brown",
+      action: "rated Data Science 5 stars",
+      timestamp: "2023-05-06T14:20:00Z",
+    },
+    {
+      type: "enrollment",
+      user: "Chris Wilson",
+      action: "enrolled in Machine Learning",
+      timestamp: "2023-05-06T11:00:00Z",
+    },
+  ],
+  newCourses: {
+    lastMonth: 5,
+  },
+  courseAnalytics: {
+    "course-1": {
+      enrollmentTrend: [
+        { date: "2023-04-01", value: 850 },
+        { date: "2023-04-15", value: 950 },
+        { date: "2023-05-01", value: 1100 },
+        { date: "2023-05-15", value: 1245 },
+      ],
+      completionRate: 68,
+      averageRating: 4.5,
+      totalRatings: 320,
+      newEnrollments: 145,
+      studentEngagement: [
+        { date: "2023-05-01", value: 42 },
+        { date: "2023-05-02", value: 45 },
+        { date: "2023-05-03", value: 50 },
+        { date: "2023-05-04", value: 48 },
+        { date: "2023-05-05", value: 52 },
+        { date: "2023-05-06", value: 55 },
+        { date: "2023-05-07", value: 58 },
+      ],
+      studentProgress: [
+        { name: "Not Started", value: 15 },
+        { name: "In Progress", value: 45 },
+        { name: "Completed", value: 40 },
+      ],
+      mostViewedLessons: [
+        { title: "Introduction to HTML", views: 980 },
+        { title: "CSS Selectors", views: 850 },
+        { title: "JavaScript Syntax", views: 720 },
+        { title: "HTML Elements", views: 690 },
+        { title: "CSS Box Model", views: 630 },
+      ],
+      recentFeedback: [
+        {
+          student: "Alice Johnson",
+          rating: 5,
+          comment: "Great course! Very informative and well-structured.",
+          date: "2 days ago",
+        },
+        {
+          student: "Bob Smith",
+          rating: 4,
+          comment: "Good content, but could use more practical examples.",
+          date: "4 days ago",
+        },
+        {
+          student: "Carol Davis",
+          rating: 5,
+          comment: "Excellent for beginners. Highly recommended!",
+          date: "1 week ago",
+        },
+      ],
+      enrolledStudents: [
+        {
+          name: "Alice Johnson",
+          email: "alice.johnson@example.com",
+          progress: 85,
+        },
+        { name: "Bob Smith", email: "bob.smith@example.com", progress: 50 },
+        {
+          name: "Carol Davis",
+          email: "carol.davis@example.com",
+          progress: 100,
+        },
+      ],
+    },
+  },
+  partAnalytics: {
+    "part-1": {
+      completionRate: 78,
+      averageTimeSpent: 55,
+      lessonCompletionRates: [
+        { name: "Introduction to HTML", value: 85 },
+        { name: "HTML Elements", value: 72 },
+      ],
+    },
+  },
+  lessonAnalytics: {
+    "lesson-1": {
+      views: 980,
+      completionRate: 85,
+      averageTimeSpent: 18,
+      viewsOverTime: [
+        { date: "2023-05-01", value: 120 },
+        { date: "2023-05-02", value: 135 },
+        { date: "2023-05-03", value: 150 },
+        { date: "2023-05-04", value: 142 },
+        { date: "2023-05-05", value: 158 },
+        { date: "2023-05-06", value: 165 },
+        { date: "2023-05-07", value: 180 },
+      ],
+      questionSuccessRates: [
+        { name: "Question 1", value: 92 },
+        { name: "Question 2", value: 88 },
+        { name: "Question 3", value: 76 },
+        { name: "Question 4", value: 84 },
+        { name: "Question 5", value: 90 },
+      ],
+      feedback: [
+        {
+          student: "David Wilson",
+          rating: 5,
+          comment: "Very clear explanation of HTML basics.",
+          date: "3 days ago",
+        },
+        {
+          student: "Emma Taylor",
+          rating: 4,
+          comment: "Good introduction, but could use more examples.",
+          date: "5 days ago",
+        },
+        {
+          student: "Frank Thomas",
+          rating: 5,
+          comment: "Perfect for beginners!",
+          date: "1 week ago",
+        },
+      ],
+      newViews: 100,
+    },
+  },
+};
