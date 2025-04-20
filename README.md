@@ -30,14 +30,20 @@ Dự án hoạt động theo Gitflow để quản lý code.Mỗi tính năng s�
 **Mô tả :** 
  - **Tên sản phẩm:** Long4Nihongo
 - **Thể loại:** Website dạy học tiếng Nhật
-- **Cách sử dụng :** Học thông qua flashcard, các phần lý thuyết cùng với test để luyện tập.
+- **Cách sử dụng :** Học thông qua flashcard, các phần lý thuyết, video, slide, ... cùng với test để luyện tập.
 - **Giao diện** Đơn giản, dễ sử dụng.
 
 ## 3. Các Chức Năng Chính
 
-- **Chức năng 1:** Đăng ký, đăng nhập. Có thể sử dụng tài khoản Google hoặc Facebook để đăng nhập.
-- **Chức năng 2:** Tham khảo các khóa học, chọn mua khóa học mong muốn.
-- **Chức năng 3:** Chỉ xem được nội dung của những khóa học đã mua
+- **Chức năng 1:** "Đăng ký, đăng nhập. Có thể sử dụng tài khoản Google hoặc Facebook để đăng nhập."
+- **Chức năng 2:** "Xem và cập nhật thông tin chi tiết tài khoản cá nhân"
+- **Chức năng 3:** "Tham khảo danh sách các khóa học"
+- **Chức năng 4:** "Xem giới thiệu chi tiết khóa học"
+- **Chức năng 5:** "Thanh toán khóa học (tự động xác nhận)"
+- **Chức năng 6:** "Xem danh sách các khóa học đã mua"
+- **Chức năng 7:** "Xem nội dung khóa học"
+- **Chức năng 8:** "Xem lịch sử thanh toán"
+- **Chức năng 9:** "Luyện speaking với AI voice chat"
 ## 4. Công Nghệ
 #### 4.1. Công Nghệ Sử Dụng
 - Backend: Spring Boot, Oauth2
