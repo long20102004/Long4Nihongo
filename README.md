@@ -50,18 +50,6 @@ Dự án hoạt động theo Gitflow để quản lý code.Mỗi tính năng s�
 - Front end: ReactJs
 - Database: MySQL
 - Xác thực người dùng bằng token - stateless
-## 5. Ảnh Và Video Demo
-
-**Ảnh Demo:**
-![image](https://github.com/user-attachments/assets/0f6bd312-c5ab-4da8-9533-88d1ba4a49d7)
-![image](https://github.com/user-attachments/assets/b30f7d17-fbce-4496-aac4-499681a56233)
-![image](https://github.com/user-attachments/assets/d8588ea2-241b-4286-82a1-a6746b01604a)
-![image](https://github.com/user-attachments/assets/5dbedbaa-29a7-4930-ba5a-785c36206408)
-![image](https://github.com/user-attachments/assets/6fffa9c1-6594-4da2-b872-84f46f976ba5)
-![image](https://github.com/user-attachments/assets/d207ee31-d4ac-4e8b-800d-fd6946967b7c)
-
-
-**Video Demo:**
 
 ## 6. Các Vấn Đề Gặp Phải
 
